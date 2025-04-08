@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'Log_ in.dart';
+import 'package:gradution_project/core/utils/App_assets.dart';
+import '../Auth/Log_ in.dart';
 
-import 'Sign_In.dart';
+import '../Auth/Sign_In.dart';
 
 class StartPage extends StatelessWidget {
   const StartPage({super.key});
@@ -23,7 +24,7 @@ class StartPage extends StatelessWidget {
                       child: Opacity(
                         opacity: 0.1,
                         child: Image.asset(
-                          'assets/photo/logo2.jpg',
+                          AppAssets.log1,
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -143,14 +144,6 @@ class StartPage extends StatelessWidget {
                           SizedBox(
                             width: 15,
                           ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              FontAwesomeIcons.apple,
-                              color: Colors.white,
-                              size: 35,
-                            ),
-                          )
                         ],
                       )
                     ],
@@ -179,7 +172,7 @@ class StartPage extends StatelessWidget {
               ),
               child: ClipOval(
                 child: Image.asset(
-                  'assets/photo/logo1.jpg',
+                  AppAssets.mainlogo,
                   fit: BoxFit.cover,
                 ),
               ),

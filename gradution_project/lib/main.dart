@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gradution_project/screens/Start_page.dart';
+import 'package:gradution_project/core/utils/App_color.dart';
+import 'package:gradution_project/feathure/on_boarding/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -8,15 +9,14 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          scaffoldBackgroundColor: Colors.black,
+          scaffoldBackgroundColor: AppColor.black,
           appBarTheme: AppBarTheme(backgroundColor: Colors.black)),
-      home: StartPage(),
+      home: SplashScreen(),
     );
   }
 }

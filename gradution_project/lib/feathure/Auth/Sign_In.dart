@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'Log_ in.dart';
-import 'home_page.dart';
+import '../../screens/home_page.dart';
 
 class SignIn extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -19,26 +19,14 @@ class SignIn extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        leading: Container(
-          width: 113,
-          height: 41,
-          decoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            color: Color(0xFF30C3D4),
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(50),
-              bottomRight: Radius.circular(50),
-            ),
-          ),
-          child: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              )),
-        ),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            )),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -250,14 +238,6 @@ class SignIn extends StatelessWidget {
                       ),
                       SizedBox(
                         width: 15,
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          FontAwesomeIcons.apple,
-                          color: Colors.white,
-                          size: 35,
-                        ),
                       ),
                     ],
                   )

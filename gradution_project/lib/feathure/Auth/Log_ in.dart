@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gradution_project/core/utils/App_assets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Sign_In.dart';
-import 'home_page.dart';
+import '../../screens/home_page.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
@@ -35,26 +36,14 @@ class _LogInState extends State<LogIn> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        leading: Container(
-          width: 113,
-          height: 41,
-          decoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            color: Color(0xFF30C3D4),
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(50),
-              bottomRight: Radius.circular(50),
-            ),
-          ),
-          child: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              )),
-        ),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            )),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -71,9 +60,10 @@ class _LogInState extends State<LogIn> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CircleAvatar(
-                            radius: 50,
-                            backgroundImage:
-                                AssetImage('assets/photo/logo1.jpg'),
+                            radius: 55,
+                            backgroundImage: AssetImage(
+                              AppAssets.mainlogo,
+                            ),
                           ),
                           const SizedBox(
                             width: 15,
@@ -248,14 +238,6 @@ class _LogInState extends State<LogIn> {
                     ),
                     SizedBox(
                       width: 15,
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        FontAwesomeIcons.apple,
-                        color: Colors.white,
-                        size: 35,
-                      ),
                     ),
                   ],
                 )
