@@ -3,8 +3,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gradution_project/core/utils/App_assets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/utils/App_color.dart';
+import '../../core/widgets/custtom_Feild.dart';
 import 'Sign_In.dart';
-import '../../screens/home_page.dart';
+import '../home/home_page.dart';
+import 'forget_password.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
@@ -60,13 +63,19 @@ class _LogInState extends State<LogIn> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CircleAvatar(
-                            radius: 55,
-                            backgroundImage: AssetImage(
-                              AppAssets.mainlogo,
+                            radius: 44,
+                            backgroundColor: AppColor.black,
+                            child: ClipOval(
+                              child: Image.asset(
+                                AppAssets.mainlogo,
+                                width: 72,
+                                height: 72,
+                                fit: BoxFit.contain,
+                              ),
                             ),
                           ),
                           const SizedBox(
-                            width: 15,
+                            width: 10,
                           ),
                           Text(
                             'WeyNak',
@@ -93,62 +102,55 @@ class _LogInState extends State<LogIn> {
                             fontFamily: 'Concert One'),
                       ),
                       SizedBox(
-                        height: 40,
+                        height: 20,
                       ),
-                      TextFormField(
+                      CustomTextField(
+                        hintText: 'E-mail',
                         controller: _emailController,
-                        decoration: InputDecoration(
-                          labelStyle: TextStyle(color: Colors.white),
-                          hintStyle: TextStyle(color: Colors.white),
-                          hintText: 'Enter Your Email',
-                          labelText: 'Email',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: const BorderSide(color: Colors.white),
-                          ),
-                          prefixIcon: const Icon(
-                            Icons.email,
-                            color: Colors.white,
-                          ),
-                        ),
-                        style: TextStyle(color: Colors.white),
+                        isEditing: true,
+                        prefixIcon: Icons.email,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your email';
-                          } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
-                              .hasMatch(value)) {
-                            return 'Please enter a valid email';
                           }
                           return null;
                         },
                       ),
-                      const SizedBox(height: 20),
-                      TextFormField(
+                      const SizedBox(height: 10),
+                      CustomTextField(
+                        hintText: 'Password',
                         controller: _passwordController,
-                        decoration: InputDecoration(
-                          labelStyle: TextStyle(color: Colors.white),
-                          hintStyle: TextStyle(color: Colors.white),
-                          labelText: 'Password',
-                          hintText: 'Enter Your Password',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: const BorderSide(color: Colors.white),
-                          ),
-                          prefixIcon:
-                              const Icon(Icons.lock, color: Colors.white),
-                        ),
-                        style: TextStyle(color: Colors.white),
-                        obscureText: true,
+                        isEditing: true,
+                        prefixIcon: Icons.lock,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your password';
-                          } else if (value.length < 8) {
-                            return 'Password must be at least 8 characters';
                           }
                           return null;
                         },
                       ),
-                      const SizedBox(height: 40),
+                      const SizedBox(height: 10),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ForgotPassword(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'Forgot Password?',
+                            style: TextStyle(
+                              color: AppColor.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                      ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             minimumSize: Size(159, 51),
@@ -182,7 +184,7 @@ class _LogInState extends State<LogIn> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

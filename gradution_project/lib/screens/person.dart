@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
-import 'custtom_Feild.dart';
+import '../core/widgets/custtom_Feild.dart';
 
 class PersonPage extends StatefulWidget {
   const PersonPage({super.key});
@@ -82,7 +82,6 @@ class _PersonPageState extends State<PersonPage> {
       phoneController.text = "";
       imagePath = null;
     });
-    print("User data cleared");
   }
 
   @override
