@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:gradution_project/core/utils/App_assets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -184,7 +185,7 @@ class _LogInState extends State<LogIn> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -216,30 +217,40 @@ class _LogInState extends State<LogIn> {
                     ),
                   ],
                 ),
-                Row(
+                Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        FontAwesomeIcons.facebook,
+                    const Text(
+                      'or log in with ',
+                      style: TextStyle(
                         color: Colors.white,
-                        size: 35,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
                       ),
                     ),
-                    SizedBox(
-                      width: 15,
+                    const SizedBox(
+                      height: 30,
                     ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        FontAwesomeIcons.google,
-                        color: Colors.white,
-                        size: 35,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 15,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        InkWell(
+                            onTap: () {
+                              // Handle Facebook login
+                            },
+                            child: SvgPicture.asset(AppAssets.face)),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        InkWell(
+                            onTap: () {
+                              // Handle Google login
+                            },
+                            child: SvgPicture.asset(AppAssets.googel)),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                      ],
                     ),
                   ],
                 )

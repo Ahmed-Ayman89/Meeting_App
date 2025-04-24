@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_svg/svg.dart';
+
+import '../../core/utils/App_assets.dart';
 import 'Log_ in.dart';
 import '../home/home_page.dart';
 import '../../core/widgets/custtom_Feild.dart';
@@ -199,23 +201,19 @@ class _SignInState extends State<SignIn> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        FontAwesomeIcons.facebook,
-                        color: Colors.white,
-                        size: 35,
-                      ),
+                    InkWell(
+                        onTap: () {
+                          // Handle Facebook login
+                        },
+                        child: SvgPicture.asset(AppAssets.face)),
+                    const SizedBox(
+                      width: 15,
                     ),
-                    const SizedBox(width: 15),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        FontAwesomeIcons.google,
-                        color: Colors.white,
-                        size: 35,
-                      ),
-                    ),
+                    InkWell(
+                        onTap: () {
+                          // Handle Google login
+                        },
+                        child: SvgPicture.asset(AppAssets.googel)),
                   ],
                 ),
               ],

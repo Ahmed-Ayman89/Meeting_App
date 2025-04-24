@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:gradution_project/core/utils/App_assets.dart';
 import '../Auth/Log_ in.dart';
 
@@ -119,33 +119,6 @@ class StartPage extends StatelessWidget {
                       const SizedBox(
                         height: 15,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              FontAwesomeIcons.facebook,
-                              color: Colors.white,
-                              size: 35,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              FontAwesomeIcons.google,
-                              color: Colors.white,
-                              size: 35,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                        ],
-                      )
                     ],
                   ),
                 ),
