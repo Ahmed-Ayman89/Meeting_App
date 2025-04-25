@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:gradution_project/core/utils/App_assets.dart';
-import '../Auth/Log_ in.dart';
+import '../LogIn/view/Log_ in.dart';
 
-import '../Auth/Sign_In.dart';
+import '../regester/view/Sign_In.dart';
 
 class StartPage extends StatelessWidget {
   const StartPage({super.key});
@@ -83,7 +83,7 @@ class StartPage extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const LogIn(),
+                                builder: (context) => LogIn(),
                               ));
                         },
                         child: const Text(

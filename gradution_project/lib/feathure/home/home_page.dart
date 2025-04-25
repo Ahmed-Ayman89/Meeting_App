@@ -1,61 +1,98 @@
 import 'package:flutter/material.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:gradution_project/core/utils/App_assets.dart';
 
-import 'package:gradution_project/screens/list_page.dart';
-import 'package:gradution_project/screens/person.dart';
+import '../../delete_me.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  int index = 0;
-
-  final List<Widget> screens = [
-    const HomeScreen(),
-    const ListPage(),
-    const PersonPage(),
-  ];
+class Homepage extends StatelessWidget {
+  const Homepage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final items = const [
-      Icon(Icons.home, size: 30),
-      Icon(Icons.list, size: 30),
-      Icon(Icons.person, size: 30),
-    ];
-
     return Scaffold(
-      extendBody: true,
-      body: screens[index],
-      bottomNavigationBar: Theme(
-        data: Theme.of(context)
-            .copyWith(iconTheme: IconThemeData(color: Colors.white)),
-        child: CurvedNavigationBar(
-          buttonBackgroundColor: const Color(0xFF30C3D4),
-          color: const Color(0xFF30C3D4),
-          backgroundColor: Colors.transparent,
-          index: index,
-          height: 60,
-          animationDuration: const Duration(milliseconds: 300),
-          onTap: (i) => setState(() => index = i), // تغيير الصفحة عند الضغط
-          items: items,
+      appBar: AppBar(
+        leading: const SizedBox(),
+        title: const Text(
+          'Meetings',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Concert One',
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.notifications,
+              color: Colors.white,
+              size: 26,
+            ),
+            onPressed: () {},
+          )
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(30.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 30),
+
+            const Text(
+              'Create Meeting',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Concert One',
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            // Image
+            ClipRRect(
+              borderRadius: BorderRadius.circular(21),
+              child: Image.asset(
+                AppAssets.maplogo,
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: 269,
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // Create Meeting Button
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MapScreen(),
+                      ));
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  side: const BorderSide(color: Color(0xFF30C3D4), width: 2),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  minimumSize: const Size(250, 50),
+                ),
+                child: const Text(
+                  'CREATE A MEETING',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Concert One',
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Home Page', style: TextStyle(fontSize: 24)),
     );
   }
 }
