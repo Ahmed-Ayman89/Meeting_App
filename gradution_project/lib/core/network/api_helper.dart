@@ -25,13 +25,6 @@ class APIHelper {
 
   // get request
 
-  Future<Response> getData({
-    required String url,
-    required Map<String, dynamic> data,
-  }) async {
-    return await dio.post(url, data: data);
-  }
-
   // post
 
   Future<Response> postData({
@@ -41,17 +34,24 @@ class APIHelper {
     return await dio.post(url, data: data);
   }
 
+  Future<Response> getData({
+    required String url,
+    required Map<String, dynamic> data,
+  }) async {
+    return await dio.get(url, queryParameters: data);
+  }
+
   Future<Response> putData({
     required String url,
     required Map<String, dynamic> data,
   }) async {
-    return await dio.post(url, data: data);
+    return await dio.put(url, data: data);
   }
 
   Future<Response> deleteData({
     required String url,
     required Map<String, dynamic> data,
   }) async {
-    return await dio.post(url, data: data);
+    return await dio.delete(url, data: data);
   }
 }

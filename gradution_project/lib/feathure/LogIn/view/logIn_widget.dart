@@ -5,7 +5,7 @@ import 'package:gradution_project/core/utils/App_color.dart';
 import 'package:gradution_project/core/widgets/custtom_Feild.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../regester/view/Sign_In.dart';
-import '../forget_password.dart';
+import '../../forget_pass/view/forget_password.dart';
 import '../manager/logIn_cubit.dart';
 import '../manager/logIn_state.dart';
 import '../../home/navigation.dart';
