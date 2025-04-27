@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gradution_project/core/utils/App_assets.dart';
 import 'package:gradution_project/core/utils/App_color.dart';
 import 'package:gradution_project/core/widgets/custtom_Feild.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // ضفنا الشيرد برفرانس
 import '../../regester/view/Sign_In.dart';
 import '../../forget_pass/view/forget_password.dart';
 import '../manager/logIn_cubit.dart';
 import '../manager/logIn_state.dart';
 import '../../home/navigation.dart';
 
-// Widget خاص بالـ logo
+// Logo
 Widget buildLogo() {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
@@ -40,7 +41,7 @@ Widget buildLogo() {
   );
 }
 
-// Widget خاص بعنوان الـ Login
+// Title
 Widget buildTitle() {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +66,7 @@ Widget buildTitle() {
   );
 }
 
-// Widget خاص بالفورم
+// Form
 Widget buildLoginForm({
   required BuildContext context,
   required TextEditingController emailController,
@@ -129,7 +130,7 @@ Widget buildLoginForm({
   );
 }
 
-// Widget خاص بالزرار
+// Login Button
 Widget buildLoginButton({
   required BuildContext context,
   required GlobalKey<FormState> formKey,
@@ -137,8 +138,13 @@ Widget buildLoginButton({
   required TextEditingController passwordController,
 }) {
   return BlocConsumer<LoginCubit, LoginState>(
-    listener: (context, state) {
+    listener: (context, state) async {
       if (state is LoginSuccess) {
+        // نحفظ التوكن
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', state.model.token ?? '');
+        await prefs.setBool('isLoggedIn', true);
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -212,7 +218,7 @@ Widget buildLoginButton({
   );
 }
 
-// Widget خاص بالـ Footer
+// Footer
 Widget buildFooter(BuildContext context) {
   return Column(
     children: [
@@ -275,11 +281,10 @@ Widget buildFooter(BuildContext context) {
                 },
                 child: SvgPicture.asset(AppAssets.googel),
               ),
-              const SizedBox(width: 15),
             ],
           ),
         ],
-      )
+      ),
     ],
   );
 }

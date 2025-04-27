@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gradution_project/core/utils/App_assets.dart';
 import 'package:gradution_project/core/utils/App_color.dart';
 import 'package:gradution_project/feathure/on_boarding/Start_page.dart';
+
+import '../home/navigation.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -21,15 +24,14 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-    // أنيميشن التحكم
     _controller = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 1200),
     );
 
     _slideAnimation = Tween<Offset>(
-      begin: Offset(0, 1), // تبدأ من تحت
-      end: Offset.zero, // وتنتهي في النص
+      begin: Offset(0, 1),
+      end: Offset.zero,
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.easeOutBack,
@@ -43,21 +45,32 @@ class _SplashScreenState extends State<SplashScreen>
       curve: Curves.easeIn,
     ));
 
-    // نبدأ الأنيميشن
     _controller.forward();
 
-    // بعد 3 ثواني نروح على StartPage
-    Timer(Duration(seconds: 3), () {
+    // هنا التعديل بدل ما أروح StartPage على طول
+    Timer(Duration(seconds: 3), _navigateBasedOnLogin);
+  }
+
+  Future<void> _navigateBasedOnLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+    if (isLoggedIn) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => StartPage()),
+        MaterialPageRoute(builder: (context) => const Navigation()),
       );
-    });
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const StartPage()),
+      );
+    }
   }
 
   @override
   void dispose() {
-    _controller.dispose(); // لازم نعمل ديسبوز
+    _controller.dispose();
     super.dispose();
   }
 
@@ -78,8 +91,8 @@ class _SplashScreenState extends State<SplashScreen>
                   width: 200,
                   height: 200,
                 ),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   'WeyNak',
                   textAlign: TextAlign.center,
                   style: TextStyle(

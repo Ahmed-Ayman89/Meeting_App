@@ -3,7 +3,6 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:gradution_project/feathure/home/home_page.dart';
 
 import 'package:gradution_project/screens/list_page.dart';
-import 'package:gradution_project/screens/person.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation({super.key});
@@ -18,7 +17,6 @@ class _NavigationState extends State<Navigation> {
   final List<Widget> screens = [
     const Homepage(),
     const ListPage(),
-    const PersonPage(),
   ];
 
   @override
@@ -26,7 +24,6 @@ class _NavigationState extends State<Navigation> {
     final items = const [
       Icon(Icons.home, size: 30),
       Icon(Icons.list, size: 30),
-      Icon(Icons.person, size: 30),
     ];
 
     return Scaffold(

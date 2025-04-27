@@ -32,10 +32,6 @@ class _PersonPageState extends State<PersonPage> {
     String loadedPhone = prefs.getString('userPhone') ?? "";
     String? loadedImagePath = prefs.getString('userImagePath');
 
-    print("Loaded Name: $loadedName");
-    print("Loaded Email: $loadedEmail");
-    print("Loaded Phone: $loadedPhone");
-
     setState(() {
       nameController.text = loadedName;
       emailController.text = loadedEmail;
@@ -49,10 +45,6 @@ class _PersonPageState extends State<PersonPage> {
     await prefs.setString('userName', nameController.text);
     await prefs.setString('userEmail', emailController.text);
     await prefs.setString('userPhone', phoneController.text);
-
-    print("Saved Name: ${nameController.text}");
-    print("Saved Email: ${emailController.text}");
-    print("Saved Phone: ${phoneController.text}");
 
     setState(() {}); // تحديث الواجهة بعد الحفظ
   }
@@ -88,10 +80,20 @@ class _PersonPageState extends State<PersonPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+            size: 30,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.delete, color: Colors.red),
-            onPressed: _clearUserData, // زر لمسح البيانات المخزنة
+            onPressed: _clearUserData,
           ),
         ],
       ),

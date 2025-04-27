@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gradution_project/core/utils/App_color.dart';
 import 'package:gradution_project/feathure/on_boarding/splash_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
