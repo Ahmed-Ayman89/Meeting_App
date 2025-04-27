@@ -23,7 +23,7 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
       data: {
         'email': email,
         'otp': otp,
-        'new_password': password,
+        'newPassword': password,
         'confirm_password': confirmPassword,
       },
     ).then((value) {
