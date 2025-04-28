@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gradution_project/core/theme/theme_ext.dart';
 import 'package:gradution_project/feathure/regester/manager/regester_cubit.dart';
+
+import '../../../core/theme/theme_cubit.dart';
 import 'Sign_In_widget.dart';
 
-class SignIn extends StatefulWidget {
-  const SignIn({super.key});
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
 
   @override
-  State<SignIn> createState() => _SignInState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _SignInState extends State<SignIn> {
+class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -29,21 +32,38 @@ class _SignInState extends State<SignIn> {
     return BlocProvider(
       create: (_) => RegisterCubit(),
       child: Scaffold(
+        backgroundColor: context.backgroundColor,
         appBar: AppBar(
+          backgroundColor: context.backgroundColor,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back, color: context.textColor),
           ),
+          actions: [
+            IconButton(
+              icon: Icon(
+                context.isDark ? Icons.dark_mode : Icons.light_mode,
+                color: context.textColor,
+              ),
+              onPressed: () {
+                context.read<ThemeCubit>().toggleTheme();
+              },
+            ),
+          ],
         ),
         body: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 20),
-                buildSignUpTitle(),
+                buildSignUpTitle(context),
                 const SizedBox(height: 20),
                 buildSignUpForm(
+                  context: context,
                   formKey: _formKey,
                   nameController: _nameController,
                   emailController: _emailController,
@@ -57,8 +77,8 @@ class _SignInState extends State<SignIn> {
                   emailController: _emailController,
                   passwordController: _passwordController,
                 ),
-                const SizedBox(height: 20),
-                buildSocialLogins(),
+                const SizedBox(height: 30),
+                buildSocialLogins(context),
               ],
             ),
           ),

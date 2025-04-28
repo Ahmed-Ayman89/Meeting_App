@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../theme/theme_cubit.dart';
 
 class ProfileMenuItem extends StatelessWidget {
   final Widget icon;
@@ -25,8 +28,10 @@ class ProfileMenuItem extends StatelessWidget {
             Expanded(
               child: Text(
                 text,
-                style: const TextStyle(
-                    color: Colors.white,
+                style: TextStyle(
+                    color: context.watch<ThemeCubit>().state
+                        ? Colors.white
+                        : Colors.black,
                     fontSize: 25,
                     fontFamily: ' Concert One',
                     fontWeight: FontWeight.w400),

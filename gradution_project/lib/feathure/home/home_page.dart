@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gradution_project/core/utils/App_assets.dart';
-
+import '../../core/theme/theme_cubit.dart';
+import '../../core/utils/App_color.dart';
 import '../../map_screen.dart';
 
 class Homepage extends StatelessWidget {
@@ -9,12 +11,17 @@ class Homepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:
+          context.watch<ThemeCubit>().state ? AppColor.black : AppColor.white,
       appBar: AppBar(
+        backgroundColor:
+            context.watch<ThemeCubit>().state ? AppColor.black : AppColor.white,
         leading: const SizedBox(),
-        title: const Text(
+        title: Text(
           'Meetings',
           style: TextStyle(
-            color: Colors.white,
+            color:
+                context.watch<ThemeCubit>().state ? Colors.white : Colors.black,
             fontSize: 22,
             fontWeight: FontWeight.bold,
             fontFamily: 'Concert One',
@@ -24,7 +31,9 @@ class Homepage extends StatelessWidget {
           IconButton(
             icon: Icon(
               Icons.notifications,
-              color: Colors.white,
+              color: context.watch<ThemeCubit>().state
+                  ? Colors.white
+                  : Colors.black,
               size: 26,
             ),
             onPressed: () {},
@@ -38,10 +47,12 @@ class Homepage extends StatelessWidget {
           children: [
             const SizedBox(height: 30),
 
-            const Text(
+            Text(
               'Create Meeting',
               style: TextStyle(
-                color: Colors.white,
+                color: context.watch<ThemeCubit>().state
+                    ? Colors.white
+                    : Colors.black,
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Concert One',
@@ -72,17 +83,21 @@ class Homepage extends StatelessWidget {
                       ));
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: context.watch<ThemeCubit>().state
+                      ? Colors.black
+                      : Colors.white,
                   side: const BorderSide(color: Color(0xFF30C3D4), width: 2),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
                   minimumSize: const Size(250, 50),
                 ),
-                child: const Text(
+                child: Text(
                   'CREATE A MEETING',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: context.watch<ThemeCubit>().state
+                        ? Colors.white
+                        : Colors.black,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Concert One',

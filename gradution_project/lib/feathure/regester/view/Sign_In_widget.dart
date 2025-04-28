@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gradution_project/core/theme/theme_ext.dart';
 import 'package:gradution_project/core/widgets/custtom_Feild.dart';
 import 'package:gradution_project/core/utils/App_assets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gradution_project/feathure/regester/manager/regester_cubit.dart';
 import 'package:gradution_project/feathure/regester/manager/regester_state.dart';
+
 import '../../home/navigation.dart';
 
-Widget buildSignUpTitle() {
+Widget buildSignUpTitle(BuildContext context) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
-    children: const [
+    children: [
       Text(
         'Welcome!',
         style: TextStyle(
-          color: Colors.white,
+          color: context.textColor,
           fontSize: 46,
           fontFamily: 'Concert One',
         ),
@@ -22,7 +24,7 @@ Widget buildSignUpTitle() {
       Text(
         'Create an account to join WeyNak',
         style: TextStyle(
-          color: Colors.white70,
+          color: context.isDark ? Colors.white70 : Colors.black54,
           fontSize: 16,
           fontFamily: 'Concert One',
         ),
@@ -32,6 +34,7 @@ Widget buildSignUpTitle() {
 }
 
 Widget buildSignUpForm({
+  required BuildContext context,
   required GlobalKey<FormState> formKey,
   required TextEditingController nameController,
   required TextEditingController emailController,
@@ -62,6 +65,10 @@ Widget buildSignUpForm({
           validator: (value) {
             if (value == null || value.isEmpty) {
               return 'Please enter your email';
+            }
+            final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+            if (!emailRegex.hasMatch(value)) {
+              return 'Please enter a valid email address';
             }
             return null;
           },
@@ -95,17 +102,23 @@ Widget buildSignUpButton({
     listener: (context, state) {
       if (state is RegisterSuccess) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(state.model.message)),
+          SnackBar(
+            content: Text(state.model.message),
+            backgroundColor: Colors.green,
+          ),
         );
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => Navigation()),
+            MaterialPageRoute(builder: (context) => const Navigation()),
           );
         });
       } else if (state is RegisterError) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${state.error}')),
+          SnackBar(
+            content: Text('Error: ${state.error}'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     },
@@ -127,7 +140,12 @@ Widget buildSignUpButton({
                 }
               },
         child: state is RegisterLoading
-            ? const CircularProgressIndicator(color: Colors.white)
+            ? const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(
+                    color: Colors.white, strokeWidth: 2),
+              )
             : const Text(
                 'Sign Up',
                 style: TextStyle(
@@ -141,18 +159,31 @@ Widget buildSignUpButton({
   );
 }
 
-Widget buildSocialLogins() {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.center,
+Widget buildSocialLogins(BuildContext context) {
+  return Column(
     children: [
-      InkWell(
-        onTap: () {},
-        child: SvgPicture.asset(AppAssets.face),
+      Text(
+        'or sign up with',
+        style: TextStyle(
+          color: context.textColor,
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+        ),
       ),
-      const SizedBox(width: 15),
-      InkWell(
-        onTap: () {},
-        child: SvgPicture.asset(AppAssets.googel),
+      const SizedBox(height: 20),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          InkWell(
+            onTap: () {},
+            child: SvgPicture.asset(AppAssets.face),
+          ),
+          const SizedBox(width: 15),
+          InkWell(
+            onTap: () {},
+            child: SvgPicture.asset(AppAssets.googel),
+          ),
+        ],
       ),
     ],
   );

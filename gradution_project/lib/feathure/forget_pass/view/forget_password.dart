@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gradution_project/core/theme/theme_ext.dart';
 import 'package:gradution_project/core/widgets/custtom_Feild.dart';
 import 'package:gradution_project/feathure/forget_pass/view/enter_otp_screen.dart';
+import '../../../core/theme/theme_cubit.dart';
 import '../../../core/utils/App_color.dart';
 import '../manager/forget_cubit.dart';
 import '../manager/forget_state.dart';
@@ -28,12 +30,27 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     return BlocProvider(
       create: (_) => ForgotPasswordCubit(),
       child: Scaffold(
+        backgroundColor: context.backgroundColor,
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
+          backgroundColor: context.backgroundColor,
           leading: IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back, color: context.textColor),
           ),
+          actions: [
+            IconButton(
+              icon: Icon(
+                context.isDark ? Icons.dark_mode : Icons.light_mode,
+                color: context.textColor,
+              ),
+              onPressed: () {
+                context.read<ThemeCubit>().toggleTheme();
+              },
+            ),
+          ],
         ),
         body: SafeArea(
           child: SingleChildScrollView(
@@ -49,14 +66,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         const SizedBox(height: 20),
                         Center(
                           child: Column(
-                            children: const [
+                            children: [
                               Icon(Icons.lock_reset,
-                                  size: 80, color: AppColor.white),
+                                  size: 80, color: context.textColor),
                               SizedBox(height: 10),
                               Text(
                                 'Forgot Password',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: context.textColor,
                                   fontSize: 36,
                                   fontFamily: 'Concert One',
                                 ),
@@ -66,7 +83,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                 'Enter your email to reset your password',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  color: Colors.white70,
+                                  color: context.textColor,
                                   fontSize: 16,
                                   fontFamily: 'Concert One',
                                 ),

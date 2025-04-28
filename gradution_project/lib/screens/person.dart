@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gradution_project/core/theme/theme_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import '../core/widgets/custtom_Feild.dart';
@@ -83,7 +85,8 @@ class _PersonPageState extends State<PersonPage> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: Colors.white,
+            color:
+                context.watch<ThemeCubit>().state ? Colors.white : Colors.black,
             size: 30,
           ),
           onPressed: () {
@@ -138,16 +141,22 @@ class _PersonPageState extends State<PersonPage> {
               SizedBox(height: 30),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    minimumSize: Size(113, 44),
-                    backgroundColor: Color(0xFF30C3D4)),
-                onPressed: _saveUserData,
+                  minimumSize: Size(200, 25),
+                  backgroundColor: context.watch<ThemeCubit>().state
+                      ? Colors.black
+                      : Colors.white,
+                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                ),
+                onPressed: () {
+                  _saveUserData();
+                },
                 child: Text(
-                  'Edit',
+                  'Save',
                   style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'Concert One',
-                    fontSize: 24,
-                    fontWeight: FontWeight.w300,
+                    fontSize: 20,
+                    color: context.watch<ThemeCubit>().state
+                        ? Colors.white
+                        : Colors.black,
                   ),
                 ),
               ),

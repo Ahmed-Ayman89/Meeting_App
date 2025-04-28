@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gradution_project/core/utils/App_color.dart';
 import 'package:gradution_project/screens/person.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../core/theme/theme_cubit.dart';
 import '../core/widgets/profile_screen.dart';
-import '../feathure/on_boarding/Start_page.dart'; // أتأكد المسار صح
+import '../feathure/on_boarding/Start_page.dart'; // تأكد المسار
 
 class ListPage extends StatelessWidget {
   const ListPage({super.key});
@@ -11,14 +14,15 @@ class ListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor:
-          Colors.black, // خلفية أسود مثلاً لو ماشي بنفس ستايل الأبلكيشن
+          context.watch<ThemeCubit>().state ? AppColor.black : AppColor.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
+        title: Text(
           "Settings",
           style: TextStyle(
-            color: Colors.white,
+            color:
+                context.watch<ThemeCubit>().state ? Colors.white : Colors.black,
             fontSize: 24,
             fontFamily: 'Concert One',
           ),
@@ -31,13 +35,17 @@ class ListPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 30),
+
+            // Profile button
             ProfileMenuItem(
-              icon: const Icon(
+              icon: Icon(
                 Icons.person,
-                color: Colors.white,
+                color: context.watch<ThemeCubit>().state
+                    ? Colors.white
+                    : Colors.black,
                 size: 40,
               ),
-              text: 'profile',
+              text: 'Profile',
               onTap: () {
                 Navigator.push(
                   context,
@@ -47,28 +55,54 @@ class ListPage extends StatelessWidget {
                 );
               },
             ),
+
             const SizedBox(height: 30),
-            ProfileMenuItem(
-              icon: const Icon(
-                Icons.dark_mode,
-                color: Colors.white,
-                size: 40,
-              ),
-              text: 'theme',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const PersonPage(),
+
+            // Theme Switch
+            BlocBuilder<ThemeCubit, bool>(
+              builder: (context, isDarkMode) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: isDarkMode ? AppColor.black : AppColor.white,
+                  ),
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.dark_mode,
+                      color: isDarkMode ? Colors.white : Colors.black,
+                      size: 40,
+                    ),
+                    title: Text(
+                      'Theme',
+                      style: TextStyle(
+                        color: isDarkMode ? Colors.white : Colors.black,
+                        fontSize: 20,
+                        fontFamily: 'Concert One',
+                      ),
+                    ),
+                    trailing: Switch(
+                      value: isDarkMode,
+                      activeColor: Colors.green,
+                      inactiveThumbColor: Colors.grey,
+                      onChanged: (_) {
+                        context.read<ThemeCubit>().toggleTheme();
+                      },
+                    ),
                   ),
                 );
               },
             ),
+
             const SizedBox(height: 30),
+
+            // Logout button
             ProfileMenuItem(
-              icon: const Icon(
+              icon: Icon(
                 Icons.logout,
-                color: Colors.white,
+                color: context.watch<ThemeCubit>().state
+                    ? Colors.white
+                    : Colors.black,
                 size: 40,
               ),
               text: 'Log Out',
@@ -106,14 +140,14 @@ class ListPage extends StatelessWidget {
                   await prefs.remove('token');
                   await prefs.remove('isLoggedIn');
 
-                  // ارجع المستخدم لأول صفحة (مثلا StartPage)
+                  // ارجع المستخدم لأول صفحة
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => const StartPage()),
                     (route) => false,
                   );
 
-                  // بعدها بلحظة صغيرة نطلع SnackBar
+                  // بعد الخروج نظهر SnackBar
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -137,6 +171,7 @@ class ListPage extends StatelessWidget {
                 }
               },
             ),
+
             const SizedBox(height: 20),
           ],
         ),

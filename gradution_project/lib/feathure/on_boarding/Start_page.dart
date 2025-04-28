@@ -104,7 +104,7 @@ class StartPage extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => SignIn(),
+                                builder: (context) => SignUp(),
                               ));
                         },
                         child: const Text(

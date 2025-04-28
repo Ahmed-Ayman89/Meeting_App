@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gradution_project/core/utils/App_assets.dart';
-import 'package:gradution_project/core/utils/App_color.dart';
-import 'package:gradution_project/core/widgets/custtom_Feild.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // ضفنا الشيرد برفرانس
+import 'package:gradution_project/core/theme/theme_ext.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../core/utils/App_assets.dart';
+import '../../../core/utils/App_color.dart';
+import '../../../core/widgets/custtom_Feild.dart';
+
 import '../../regester/view/Sign_In.dart';
 import '../../forget_pass/view/forget_password.dart';
 import '../manager/logIn_cubit.dart';
@@ -12,13 +15,13 @@ import '../manager/logIn_state.dart';
 import '../../home/navigation.dart';
 
 // Logo
-Widget buildLogo() {
+Widget buildLogo(BuildContext context) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       CircleAvatar(
         radius: 44,
-        backgroundColor: AppColor.black,
+        backgroundColor: context.isDark ? AppColor.black : AppColor.white,
         child: ClipOval(
           child: Image.asset(
             AppAssets.mainlogo,
@@ -32,7 +35,7 @@ Widget buildLogo() {
       Text(
         'WeyNak',
         style: TextStyle(
-          color: Colors.white,
+          color: context.textColor,
           fontSize: 46,
           fontFamily: 'Concert One',
         ),
@@ -42,14 +45,14 @@ Widget buildLogo() {
 }
 
 // Title
-Widget buildTitle() {
+Widget buildTitle(BuildContext context) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(
         'LOG IN',
         style: TextStyle(
-          color: Colors.white,
+          color: context.textColor,
           fontSize: 46,
           fontFamily: 'Concert One',
         ),
@@ -57,7 +60,7 @@ Widget buildTitle() {
       Text(
         'Use your E-mail and Password to login',
         style: TextStyle(
-          color: Colors.white,
+          color: context.isDark ? Colors.white : Colors.black,
           fontSize: 16,
           fontFamily: 'Concert One',
         ),
@@ -83,12 +86,8 @@ Widget buildLoginForm({
           controller: emailController,
           isEditing: true,
           prefixIcon: Icons.email,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter your email';
-            }
-            return null;
-          },
+          validator: (value) =>
+              value == null || value.isEmpty ? 'Please enter your email' : null,
         ),
         const SizedBox(height: 10),
         CustomTextField(
@@ -96,12 +95,9 @@ Widget buildLoginForm({
           controller: passwordController,
           isEditing: true,
           prefixIcon: Icons.lock,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter your password';
-            }
-            return null;
-          },
+          validator: (value) => value == null || value.isEmpty
+              ? 'Please enter your password'
+              : null,
         ),
         const SizedBox(height: 10),
         Align(
@@ -111,14 +107,14 @@ Widget buildLoginForm({
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ForgotPassword(),
+                  builder: (context) => const ForgotPassword(),
                 ),
               );
             },
             child: const Text(
               'Forgot Password?',
               style: TextStyle(
-                color: AppColor.white,
+                color: AppColor.lightblue,
                 fontWeight: FontWeight.bold,
                 fontSize: 15,
               ),
@@ -140,14 +136,13 @@ Widget buildLoginButton({
   return BlocConsumer<LoginCubit, LoginState>(
     listener: (context, state) async {
       if (state is LoginSuccess) {
-        // نحفظ التوكن
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', state.model.token ?? '');
         await prefs.setBool('isLoggedIn', true);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
+            content: const Text(
               'Login Successful',
               style: TextStyle(
                 fontSize: 16,
@@ -156,19 +151,19 @@ Widget buildLoginButton({
               ),
             ),
             backgroundColor: AppColor.lightblue,
-            duration: Duration(seconds: 3),
+            duration: const Duration(seconds: 3),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
             behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(10),
+            margin: const EdgeInsets.all(10),
           ),
         );
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => Navigation()),
+            MaterialPageRoute(builder: (context) => const Navigation()),
           );
         });
       } else if (state is LoginError) {
@@ -180,8 +175,8 @@ Widget buildLoginButton({
     builder: (context, state) {
       return ElevatedButton(
         style: ElevatedButton.styleFrom(
-          minimumSize: Size(159, 51),
-          backgroundColor: Color(0xFF30C3D4),
+          minimumSize: const Size(159, 51),
+          backgroundColor: AppColor.lightblue,
         ),
         onPressed: state is LoginLoading
             ? null
@@ -197,7 +192,7 @@ Widget buildLoginButton({
                 }
               },
         child: state is LoginLoading
-            ? SizedBox(
+            ? const SizedBox(
                 width: 24,
                 height: 24,
                 child: CircularProgressIndicator(
@@ -225,10 +220,10 @@ Widget buildFooter(BuildContext context) {
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
+          Text(
             "Don't have an account?",
             style: TextStyle(
-              color: Colors.white,
+              color: context.textColor,
               fontWeight: FontWeight.w600,
               fontSize: 18,
             ),
@@ -237,15 +232,13 @@ Widget buildFooter(BuildContext context) {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => SignIn(),
-                ),
+                MaterialPageRoute(builder: (context) => SignUp()),
               );
             },
             child: const Text(
               'Sign In',
               style: TextStyle(
-                color: Color(0xFF30C3D4),
+                color: AppColor.lightblue,
                 fontWeight: FontWeight.bold,
                 fontSize: 15,
               ),
@@ -256,10 +249,10 @@ Widget buildFooter(BuildContext context) {
       Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
+          Text(
             'or log in with ',
             style: TextStyle(
-              color: Colors.white,
+              color: context.textColor,
               fontWeight: FontWeight.w600,
               fontSize: 18,
             ),
@@ -269,16 +262,12 @@ Widget buildFooter(BuildContext context) {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               InkWell(
-                onTap: () {
-                  // Handle Facebook login
-                },
+                onTap: () {},
                 child: SvgPicture.asset(AppAssets.face),
               ),
               const SizedBox(width: 15),
               InkWell(
-                onTap: () {
-                  // Handle Google login
-                },
+                onTap: () {},
                 child: SvgPicture.asset(AppAssets.googel),
               ),
             ],

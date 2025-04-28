@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gradution_project/core/theme/theme_cubit.dart';
 import 'package:gradution_project/core/utils/App_color.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -31,8 +33,10 @@ class CustomTextField extends StatelessWidget {
           if (label != null)
             Text(
               label!,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: context.watch<ThemeCubit>().state
+                    ? Colors.white
+                    : Colors.black,
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),

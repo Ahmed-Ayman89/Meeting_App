@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gradution_project/core/utils/App_color.dart';
+import 'package:gradution_project/core/theme/theme_ext.dart';
 import 'package:gradution_project/core/widgets/custtom_Feild.dart';
 import 'package:gradution_project/feathure/LogIn/view/Log_%20in.dart';
 import '../manager/otp_cubit.dart';
@@ -20,11 +20,13 @@ class EnterOtpScreen extends StatelessWidget {
     return BlocProvider(
       create: (_) => OtpCubit(),
       child: Scaffold(
+        backgroundColor: context.backgroundColor,
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
+          backgroundColor: context.backgroundColor,
           leading: IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            icon: Icon(Icons.arrow_back, color: context.textColor),
           ),
         ),
         body: SafeArea(
@@ -38,13 +40,13 @@ class EnterOtpScreen extends StatelessWidget {
                     const SizedBox(height: 20),
                     Center(
                       child: Column(
-                        children: const [
-                          Icon(Icons.email, size: 80, color: AppColor.white),
+                        children: [
+                          Icon(Icons.email, size: 80, color: context.textColor),
                           SizedBox(height: 10),
                           Text(
                             'Enter OTP',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: context.textColor,
                               fontSize: 36,
                               fontFamily: 'Concert One',
                             ),
@@ -54,7 +56,7 @@ class EnterOtpScreen extends StatelessWidget {
                             'Please enter the OTP and your new password',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: Colors.white70,
+                              color: context.textColor,
                               fontSize: 16,
                               fontFamily: 'Concert One',
                             ),
@@ -139,7 +141,7 @@ class EnterOtpScreen extends StatelessWidget {
                         return Center(
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColor.lightblue,
+                              backgroundColor: const Color(0xFF30C3D4),
                               minimumSize: const Size(160, 51),
                             ),
                             onPressed: state is OtpLoading
