@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gradution_project/core/utils/App_color.dart';
-import 'package:geocoding/geocoding.dart'; // 📍 مهم جداً
+import 'package:geocoding/geocoding.dart';
+
+import 'contact_info.dart'; // 📍 مهم جداً
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -117,9 +119,18 @@ class _MapScreenState extends State<MapScreen> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                TextButton(
-                                  onPressed: () {},
-                                  child: const Text("Edit"),
+                                TextButton.icon(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ContactsScreen(),
+                                      ),
+                                    );
+                                  },
+                                  label: const Text("Add contact"),
+                                  icon: const Icon(Icons.contact_phone,
+                                      color: AppColor.black),
                                 ),
                               ],
                             ),
