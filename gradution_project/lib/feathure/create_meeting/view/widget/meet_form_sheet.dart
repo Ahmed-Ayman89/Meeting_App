@@ -8,12 +8,12 @@ import '../../manager/meeting_cubit.dart';
 
 class MeetingFormSheet extends StatefulWidget {
   final LatLng selectedLatLng;
-  final TextEditingController locationController; // إضافة الـ controller
+  final TextEditingController locationController;
 
   const MeetingFormSheet({
     required this.selectedLatLng,
     super.key,
-    required this.locationController, // استلام الـ controller من الـ MapScreen
+    required this.locationController,
   });
 
   @override
@@ -23,8 +23,25 @@ class MeetingFormSheet extends StatefulWidget {
 class _MeetingFormSheetState extends State<MeetingFormSheet> {
   final _formKey = GlobalKey<FormState>();
   final phoneController = TextEditingController();
+  final List<TextEditingController> _phoneControllers = [];
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
+
+  @override
+  void initState() {
+    super.initState();
+    // Start with one phone number field
+    _phoneControllers.add(TextEditingController());
+  }
+
+  @override
+  void dispose() {
+    for (var controller in _phoneControllers) {
+      controller.dispose();
+    }
+    phoneController.dispose();
+    super.dispose();
+  }
 
   void _pickDate() async {
     final date = await showDatePicker(
@@ -44,12 +61,35 @@ class _MeetingFormSheetState extends State<MeetingFormSheet> {
     if (time != null) setState(() => selectedTime = time);
   }
 
+  void _addPhoneField() {
+    setState(() {
+      _phoneControllers.add(TextEditingController());
+    });
+  }
+
+  void _removePhoneField(int index) {
+    if (_phoneControllers.length > 1) {
+      setState(() {
+        _phoneControllers[index].dispose();
+        _phoneControllers.removeAt(index);
+      });
+    }
+  }
+
   void _submitForm() {
     if (!_formKey.currentState!.validate()) return;
 
     if (selectedDate == null || selectedTime == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please select date and time')),
+      );
+      return;
+    }
+
+    // Validate at least one phone number is entered
+    if (_phoneControllers.every((controller) => controller.text.isEmpty)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please enter at least one phone number')),
       );
       return;
     }
@@ -62,13 +102,18 @@ class _MeetingFormSheetState extends State<MeetingFormSheet> {
       selectedTime!.minute,
     );
 
+    // Get all non-empty phone numbers
+    final phoneNumbers = _phoneControllers
+        .map((controller) => controller.text.trim())
+        .where((phone) => phone.isNotEmpty)
+        .toList();
+
     final meeting = MeetingModel(
-      locationName:
-          widget.locationController.text, // استخدام الـ controller هنا
+      locationName: widget.locationController.text,
       lat: widget.selectedLatLng.latitude,
       lng: widget.selectedLatLng.longitude,
       date: meetingDateTime,
-      phoneNumber: phoneController.text,
+      phoneNumbers: phoneNumbers, // Now passing a list of phone numbers
     );
 
     context.read<MeetingCubit>().saveMeeting(meeting);
@@ -90,7 +135,7 @@ class _MeetingFormSheetState extends State<MeetingFormSheet> {
             SnackBar(content: Text('Meeting saved successfully')),
           );
         } else if (state is CreateMeetLocationFailure) {
-          Navigator.pop(context); // Close loading dialog
+          Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.error)),
           );
@@ -141,10 +186,46 @@ class _MeetingFormSheetState extends State<MeetingFormSheet> {
                         : "Select a time",
                     _pickTime),
                 SizedBox(height: 12),
-                _buildTextField(
-                  "Phone Number",
-                  phoneController,
-                  keyboardType: TextInputType.phone,
+                // Phone numbers section
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Phone Numbers",
+                        style: TextStyle(color: Colors.black)),
+                    SizedBox(height: 8),
+                    ..._phoneControllers.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final controller = entry.value;
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: _buildTextField(
+                                "Phone ${index + 1}",
+                                controller,
+                                keyboardType: TextInputType.phone,
+                              ),
+                            ),
+                            IconButton(
+                              icon:
+                                  Icon(Icons.remove_circle, color: Colors.red),
+                              onPressed: () => _removePhoneField(index),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton.icon(
+                        icon: Icon(Icons.add, color: Colors.blue),
+                        label: Text("Add another phone",
+                            style: TextStyle(color: Colors.blue)),
+                        onPressed: _addPhoneField,
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 20),
                 SizedBox(
