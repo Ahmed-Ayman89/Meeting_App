@@ -4,6 +4,7 @@ import 'package:gradution_project/core/utils/App_assets.dart';
 import '../../core/theme/theme_cubit.dart';
 import '../../core/utils/App_color.dart';
 import '../../screens/map_screen.dart';
+import '../create_meeting/view/map_screen.dart';
 
 class Homepage extends StatelessWidget {
   const Homepage({super.key});

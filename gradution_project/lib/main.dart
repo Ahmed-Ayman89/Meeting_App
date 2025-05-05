@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gradution_project/feathure/on_boarding/splash_screen.dart';
-import 'core/theme/theme_cubit.dart';
+import 'package:gradution_project/core/theme/theme_cubit.dart';
+
+import 'feathure/create_meeting/data/repo/meeting_repo.dart';
+import 'feathure/create_meeting/manager/meeting_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(
-    const MyApp(),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -15,8 +16,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ThemeCubit()..loadTheme(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ThemeCubit>(
+          create: (context) => ThemeCubit()..loadTheme(),
+        ),
+        BlocProvider<MeetingCubit>(
+          create: (context) => MeetingCubit(
+            MeetingRepository(),
+          ),
+        ),
+      ],
       child: BlocBuilder<ThemeCubit, bool>(
         builder: (context, isDarkMode) {
           return MaterialApp(
