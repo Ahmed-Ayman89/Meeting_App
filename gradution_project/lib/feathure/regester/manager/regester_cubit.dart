@@ -17,14 +17,17 @@ class RegisterCubit extends Cubit<RegisterState> {
     emit(RegisterLoading());
 
     final apiHelper = APIHelper();
-    apiHelper.postData(
+    apiHelper
+        .postData(
       url: 'register',
       data: {
         'name': name,
         'email': email,
         'password': password,
       },
-    ).then((value) {
+      token: '',
+    )
+        .then((value) {
       final model = RegisterModel.fromJson(value.data);
       emit(RegisterSuccess(model));
     }).catchError((error) {

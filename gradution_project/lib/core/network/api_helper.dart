@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:gradution_project/core/network/api_response.dart';
 
 import 'api_endpoint.dart';
 
@@ -30,14 +31,28 @@ class APIHelper {
   Future<Response> postData({
     required String url,
     required Map<String, dynamic> data,
+    required String token,
   }) async {
-    return await dio.post(url, data: data);
+    dio.options.headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+
+    return await dio.post(
+      url,
+      data: data,
+    );
   }
 
   Future<Response> getData({
     required String url,
     required Map<String, dynamic> data,
+    String? token,
   }) async {
+    dio.options.headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
     return await dio.get(url, queryParameters: data);
   }
 

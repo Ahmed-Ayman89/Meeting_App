@@ -18,7 +18,8 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
   }) {
     emit(ResetPasswordLoading());
 
-    APIHelper().postData(
+    APIHelper()
+        .postData(
       url: 'reset-password',
       data: {
         'email': email,
@@ -26,7 +27,9 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
         'newPassword': password,
         'confirm_password': confirmPassword,
       },
-    ).then((value) {
+      token: '',
+    )
+        .then((value) {
       final model = ResetPasswordModel.fromJson(value.data);
       emit(ResetPasswordSuccess(model));
     }).catchError((error) {

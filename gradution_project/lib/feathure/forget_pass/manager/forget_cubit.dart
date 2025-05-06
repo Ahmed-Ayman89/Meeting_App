@@ -12,10 +12,13 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
   void sendResetLink({required String email}) {
     emit(ForgotPasswordLoading());
 
-    APIHelper().postData(
+    APIHelper()
+        .postData(
       url: 'forgot-password',
       data: {'email': email},
-    ).then((value) {
+      token: '',
+    )
+        .then((value) {
       final model = ForgotPasswordModel.fromJson(value.data);
       emit(ForgotPasswordSuccess(model));
     }).catchError((error) {

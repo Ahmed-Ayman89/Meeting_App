@@ -1,12 +1,16 @@
+import 'package:intl/intl.dart';
+
 class MeetingModel {
-  final String locationName;
+  final String meetingname;
+  final String time;
   final double lat;
   final double lng;
   final DateTime date;
   final List<String> phoneNumbers;
 
   MeetingModel({
-    required this.locationName,
+    required this.meetingname,
+    required this.time,
     required this.lat,
     required this.lng,
     required this.date,
@@ -14,20 +18,23 @@ class MeetingModel {
   });
 
   Map<String, dynamic> toJson() => {
-        'location_name': locationName,
-        'lat': lat,
-        'lng': lng,
-        'date': date.toIso8601String(),
-        'phones': phoneNumbers,
+        'meetingname': meetingname,
+        'lat': lat.toString(),
+        'lng': lng.toString(),
+        'date': DateFormat('yyyy-MM-dd').format(date),
+        'time': time, // تنسيق "HH:mm"
+        'phoneNumbers': phoneNumbers.join(','),
       };
 
+  // إضافة fromJson لمعالجة الاستجابات
   factory MeetingModel.fromJson(Map<String, dynamic> json) {
     return MeetingModel(
-      locationName: json['location_name'],
-      lat: json['lat'],
-      lng: json['lng'],
+      meetingname: json['meetingname'] ?? '',
+      time: json['time'] ?? '00:00',
+      lat: double.tryParse(json['lat']?.toString() ?? '0') ?? 0.0,
+      lng: double.tryParse(json['lng']?.toString() ?? '0') ?? 0.0,
       date: DateTime.parse(json['date']),
-      phoneNumbers: List<String>.from(json['phones'] ?? []),
+      phoneNumbers: (json['phoneNumbers']?.toString().split(',') ?? []),
     );
   }
 }

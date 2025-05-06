@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:gradution_project/feathure/create_meeting/manager/metting_state.dart';
+import 'package:gradution_project/feathure/home/manager/get_meetings_cubit/get_meetings_cubit.dart';
 import 'package:intl/intl.dart';
+
 import '../../data/model/meeting_model.dart';
 import '../../manager/meeting_cubit.dart';
+import '../../manager/metting_state.dart';
 
 class MeetingFormSheet extends StatefulWidget {
   final LatLng selectedLatLng;
@@ -22,7 +24,7 @@ class MeetingFormSheet extends StatefulWidget {
 
 class _MeetingFormSheetState extends State<MeetingFormSheet> {
   final _formKey = GlobalKey<FormState>();
-  final phoneController = TextEditingController();
+  final meetingNameController = TextEditingController();
   final List<TextEditingController> _phoneControllers = [];
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
@@ -30,23 +32,22 @@ class _MeetingFormSheetState extends State<MeetingFormSheet> {
   @override
   void initState() {
     super.initState();
-    // Start with one phone number field
     _phoneControllers.add(TextEditingController());
   }
 
   @override
   void dispose() {
+    meetingNameController.dispose();
     for (var controller in _phoneControllers) {
       controller.dispose();
     }
-    phoneController.dispose();
     super.dispose();
   }
 
   void _pickDate() async {
     final date = await showDatePicker(
       context: context,
-      initialDate: DateTime.now().add(Duration(days: 1)),
+      initialDate: DateTime.now().add(const Duration(days: 1)),
       firstDate: DateTime.now(),
       lastDate: DateTime(2100),
     );
@@ -81,39 +82,31 @@ class _MeetingFormSheetState extends State<MeetingFormSheet> {
 
     if (selectedDate == null || selectedTime == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please select date and time')),
+        const SnackBar(content: Text('Please select date and time')),
       );
       return;
     }
 
-    // Validate at least one phone number is entered
     if (_phoneControllers.every((controller) => controller.text.isEmpty)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter at least one phone number')),
+        const SnackBar(content: Text('Please enter at least one phone number')),
       );
       return;
     }
 
-    final meetingDateTime = DateTime(
-      selectedDate!.year,
-      selectedDate!.month,
-      selectedDate!.day,
-      selectedTime!.hour,
-      selectedTime!.minute,
-    );
-
-    // Get all non-empty phone numbers
-    final phoneNumbers = _phoneControllers
-        .map((controller) => controller.text.trim())
-        .where((phone) => phone.isNotEmpty)
-        .toList();
+    final formattedTime =
+        '${selectedTime!.hour.toString().padLeft(2, '0')}:${selectedTime!.minute.toString().padLeft(2, '0')}';
 
     final meeting = MeetingModel(
-      locationName: widget.locationController.text,
+      meetingname: meetingNameController.text.trim(),
+      time: formattedTime,
       lat: widget.selectedLatLng.latitude,
       lng: widget.selectedLatLng.longitude,
-      date: meetingDateTime,
-      phoneNumbers: phoneNumbers, // Now passing a list of phone numbers
+      date: selectedDate!,
+      phoneNumbers: _phoneControllers
+          .map((controller) => controller.text.trim())
+          .where((phone) => phone.isNotEmpty)
+          .toList(),
     );
 
     context.read<MeetingCubit>().saveMeeting(meeting);
@@ -127,12 +120,16 @@ class _MeetingFormSheetState extends State<MeetingFormSheet> {
           showDialog(
             context: context,
             barrierDismissible: false,
-            builder: (_) => Center(child: CircularProgressIndicator()),
+            builder: (_) => const Center(child: CircularProgressIndicator()),
           );
         } else if (state is CreateMeetLocationSuccess) {
-          Navigator.of(context).popUntil((route) => route.isFirst);
+          print('success');
+          GetMeetingsCubit.get(context).getMeetings();
+          // Navigator.of(context).popUntil((route) => route.isFirst);
+          Navigator.pop(context);
+          Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Meeting saved successfully')),
+            const SnackBar(content: Text('Meeting saved successfully')),
           );
         } else if (state is CreateMeetLocationFailure) {
           Navigator.pop(context);
@@ -142,10 +139,10 @@ class _MeetingFormSheetState extends State<MeetingFormSheet> {
         }
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Form(
           key: _formKey,
@@ -156,43 +153,44 @@ class _MeetingFormSheetState extends State<MeetingFormSheet> {
                 Container(
                   width: 40,
                   height: 5,
-                  margin: EdgeInsets.only(bottom: 16),
+                  margin: const EdgeInsets.only(bottom: 16),
                   decoration: BoxDecoration(
                     color: Colors.grey[300],
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
                 Text(
-                  "Meeting Location",
+                  "Create Meeting",
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.black),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
+                _buildTextField("Meeting Name", meetingNameController),
+                const SizedBox(height: 12),
                 _buildTextField("Meeting Location", widget.locationController),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 _buildPickerRow(
                     "Date",
                     selectedDate != null
                         ? DateFormat.yMMMMd().format(selectedDate!)
                         : "Select a date",
                     _pickDate),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 _buildPickerRow(
                     "Time",
                     selectedTime != null
                         ? selectedTime!.format(context)
                         : "Select a time",
                     _pickTime),
-                SizedBox(height: 12),
-                // Phone numbers section
+                const SizedBox(height: 12),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text("Phone Numbers",
                         style: TextStyle(color: Colors.black)),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     ..._phoneControllers.asMap().entries.map((entry) {
                       final index = entry.key;
                       final controller = entry.value;
@@ -205,11 +203,23 @@ class _MeetingFormSheetState extends State<MeetingFormSheet> {
                                 "Phone ${index + 1}",
                                 controller,
                                 keyboardType: TextInputType.phone,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    if (_phoneControllers.length > 1) {
+                                      return null;
+                                    }
+                                    return 'Required field';
+                                  }
+                                  if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                                    return 'Enter valid phone number';
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
                             IconButton(
-                              icon:
-                                  Icon(Icons.remove_circle, color: Colors.red),
+                              icon: const Icon(Icons.remove_circle,
+                                  color: Colors.red),
                               onPressed: () => _removePhoneField(index),
                             ),
                           ],
@@ -219,15 +229,15 @@ class _MeetingFormSheetState extends State<MeetingFormSheet> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton.icon(
-                        icon: Icon(Icons.add, color: Colors.blue),
-                        label: Text("Add another phone",
+                        icon: const Icon(Icons.add, color: Colors.blue),
+                        label: const Text("Add another phone",
                             style: TextStyle(color: Colors.blue)),
                         onPressed: _addPhoneField,
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
                   height: 50,
@@ -239,10 +249,10 @@ class _MeetingFormSheetState extends State<MeetingFormSheet> {
                       ),
                     ),
                     onPressed: _submitForm,
-                    child: Text("Save Meeting",
+                    child: const Text("Save Meeting",
                         style: TextStyle(fontSize: 16, color: Colors.white)),
                   ),
-                ),
+                )
               ],
             ),
           ),
@@ -251,45 +261,48 @@ class _MeetingFormSheetState extends State<MeetingFormSheet> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller,
-      {TextInputType keyboardType = TextInputType.text}) {
+  Widget _buildTextField(
+    String label,
+    TextEditingController controller, {
+    TextInputType keyboardType = TextInputType.text,
+    String? Function(String?)? validator,
+  }) {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
-      validator: (value) => value!.isEmpty ? 'Required field' : null,
+      validator:
+          validator ?? (value) => value!.isEmpty ? 'Required field' : null,
       decoration: InputDecoration(
-        hintStyle: TextStyle(color: Colors.black),
+        hintStyle: const TextStyle(color: Colors.black),
         labelText: label,
-        labelStyle: TextStyle(color: Colors.black),
+        labelStyle: const TextStyle(color: Colors.black),
         filled: true,
         fillColor: Colors.grey[100],
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide.none),
       ),
-      style: TextStyle(color: Colors.black),
+      style: const TextStyle(color: Colors.black),
     );
   }
 
   Widget _buildPickerRow(String label, String value, VoidCallback onPressed) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       decoration: BoxDecoration(
         color: Colors.grey[100],
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
-          Expanded(child: Text(label, style: TextStyle(color: Colors.black))),
+          Expanded(
+              child: Text(label, style: const TextStyle(color: Colors.black))),
           Text(value,
-              style:
-                  TextStyle(fontWeight: FontWeight.w500, color: Colors.black)),
+              style: const TextStyle(
+                  fontWeight: FontWeight.w500, color: Colors.black)),
           IconButton(
-            icon: Icon(
-              Icons.calendar_today,
-              size: 20,
-              color: Colors.black,
-            ),
+            icon:
+                const Icon(Icons.calendar_today, size: 20, color: Colors.black),
             onPressed: onPressed,
           ),
         ],

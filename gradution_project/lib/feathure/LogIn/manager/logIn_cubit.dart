@@ -15,13 +15,16 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginLoading());
 
     final apiHelper = APIHelper();
-    apiHelper.postData(
+    apiHelper
+        .postData(
       url: 'login',
       data: {
         'email': email,
         'password': password,
       },
-    ).then((value) {
+      token: '',
+    )
+        .then((value) {
       final model = LoginModel.fromJson(value.data);
       emit(LoginSuccess(model));
     }).catchError((error) {

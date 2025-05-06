@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gradution_project/feathure/home/manager/get_meetings_cubit/get_meetings_cubit.dart';
 import 'package:gradution_project/feathure/on_boarding/splash_screen.dart';
 import 'package:gradution_project/core/theme/theme_cubit.dart';
 
@@ -26,6 +27,9 @@ class MyApp extends StatelessWidget {
             MeetingRepository(),
           ),
         ),
+        BlocProvider(
+          create: (context) => GetMeetingsCubit()..getMeetings(),
+        )
       ],
       child: BlocBuilder<ThemeCubit, bool>(
         builder: (context, isDarkMode) {

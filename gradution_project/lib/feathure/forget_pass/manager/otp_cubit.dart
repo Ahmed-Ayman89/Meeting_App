@@ -14,11 +14,16 @@ class OtpCubit extends Cubit<OtpState> {
   }) {
     emit(OtpLoading());
 
-    APIHelper().postData(url: 'reset-password', data: {
-      'email': email,
-      'otp': otp,
-      'newPassword': newPassword,
-    }).then((value) {
+    APIHelper()
+        .postData(
+            url: 'reset-password',
+            data: {
+              'email': email,
+              'otp': otp,
+              'newPassword': newPassword,
+            },
+            token: '')
+        .then((value) {
       emit(OtpSuccess());
     }).catchError((error) {
       emit(OtpError(error.toString()));

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gradution_project/core/utils/App_assets.dart';
+import 'package:gradution_project/feathure/home/manager/get_meetings_cubit/get_meetings_cubit.dart';
+import 'package:gradution_project/feathure/home/manager/get_meetings_cubit/get_meetings_state.dart';
 import '../../core/theme/theme_cubit.dart';
 import '../../core/utils/App_color.dart';
 
 import '../create_meeting/view/map_screen.dart';
+import 'views/widgets/meeting_builder.dart';
 
 class Homepage extends StatelessWidget {
   const Homepage({super.key});
@@ -47,6 +50,30 @@ class Homepage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 30),
+
+            // consumer for meetings cubit
+            BlocBuilder<GetMeetingsCubit, GetMeetingsState>(
+              builder: (context, state) {
+                if (state is GetMeetingsLoadingState) {
+                  return CircularProgressIndicator();
+                } else if (state is GetMeetingsErrorState) {
+                  return Text(state.error);
+                } else if (state is GetMeetingsSuccessState) {
+                  return SizedBox(
+                    height: 200,
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: state.meetings.length,
+                        itemBuilder: (context, index) {
+                          return MeetingBuilder(
+                            meetingModel: state.meetings[index],
+                          );
+                        }),
+                  );
+                }
+                return SizedBox();
+              },
+            ),
 
             Text(
               'Create Meeting',

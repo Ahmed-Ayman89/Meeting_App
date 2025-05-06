@@ -3,4 +3,5 @@ abstract class EndPoints {
 
   static const String login = "login";
   static const String register = "register";
+  static const String getMeetings = "meetings/user";
 }
