@@ -161,9 +161,19 @@ Widget buildLoginButton({
         );
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushReplacement(
+          Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const Navigation()),
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  Navigation(),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
+              },
+            ),
           );
         });
       } else if (state is LoginError) {

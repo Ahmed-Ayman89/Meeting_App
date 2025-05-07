@@ -13,6 +13,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     required String name,
     required String email,
     required String password,
+    required String phone,
   }) {
     emit(RegisterLoading());
 
@@ -24,6 +25,7 @@ class RegisterCubit extends Cubit<RegisterState> {
         'name': name,
         'email': email,
         'password': password,
+        'phone': phone,
       },
       token: '',
     )

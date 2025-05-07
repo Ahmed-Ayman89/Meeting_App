@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:gradution_project/feathure/home/home_page.dart';
 
-import 'package:gradution_project/screens/list_page.dart';
+import 'package:gradution_project/feathure/widget/screens/list_page.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation({super.key});

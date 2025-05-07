@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gradution_project/core/theme/theme_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
-import '../core/widgets/custtom_Feild.dart';
+import '../../../core/widgets/custtom_Feild.dart';
 
 class PersonPage extends StatefulWidget {
   const PersonPage({super.key});

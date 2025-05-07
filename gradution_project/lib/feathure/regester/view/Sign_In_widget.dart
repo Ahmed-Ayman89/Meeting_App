@@ -39,11 +39,25 @@ Widget buildSignUpForm({
   required TextEditingController nameController,
   required TextEditingController emailController,
   required TextEditingController passwordController,
+  required TextEditingController phoneController,
 }) {
   return Form(
     key: formKey,
     child: Column(
       children: [
+        CustomTextField(
+          hintText: 'phone',
+          controller: phoneController,
+          isEditing: true,
+          prefixIcon: Icons.contact_page,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter your phone number';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 10),
         CustomTextField(
           hintText: 'Name',
           controller: nameController,
@@ -97,6 +111,7 @@ Widget buildSignUpButton({
   required TextEditingController nameController,
   required TextEditingController emailController,
   required TextEditingController passwordController,
+  required TextEditingController phoneController,
 }) {
   return BlocConsumer<RegisterCubit, RegisterState>(
     listener: (context, state) {
@@ -108,9 +123,19 @@ Widget buildSignUpButton({
           ),
         );
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushReplacement(
+          Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const Navigation()),
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  const Navigation(),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
+              },
+            ),
           );
         });
       } else if (state is RegisterError) {
@@ -136,6 +161,7 @@ Widget buildSignUpButton({
                     name: nameController.text,
                     email: emailController.text,
                     password: passwordController.text,
+                    phone: phoneController.text,
                   );
                 }
               },

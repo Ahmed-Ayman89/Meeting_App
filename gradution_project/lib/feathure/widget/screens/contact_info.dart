@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../core/utils/App_color.dart';
+import '../../../core/utils/App_color.dart';
 
 class Contact {
   final String id;

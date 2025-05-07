@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gradution_project/core/utils/App_color.dart';
-import 'package:gradution_project/screens/person.dart';
+import 'package:gradution_project/feathure/widget/screens/person.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../core/theme/theme_cubit.dart';
-import '../core/widgets/profile_screen.dart';
-import '../feathure/on_boarding/Start_page.dart'; // تأكد المسار
+import '../../../core/theme/theme_cubit.dart';
+import '../../../core/widgets/profile_screen.dart';
+import '../../on_boarding/Start_page.dart'; // تأكد المسار
 
 class ListPage extends StatelessWidget {
   const ListPage({super.key});

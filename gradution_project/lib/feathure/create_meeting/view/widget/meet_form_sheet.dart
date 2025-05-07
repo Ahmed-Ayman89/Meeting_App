@@ -123,7 +123,6 @@ class _MeetingFormSheetState extends State<MeetingFormSheet> {
             builder: (_) => const Center(child: CircularProgressIndicator()),
           );
         } else if (state is CreateMeetLocationSuccess) {
-          print('success');
           GetMeetingsCubit.get(context).getMeetings();
           // Navigator.of(context).popUntil((route) => route.isFirst);
           Navigator.pop(context);

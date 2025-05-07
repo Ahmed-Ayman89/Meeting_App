@@ -56,14 +56,30 @@ class _SplashScreenState extends State<SplashScreen>
     final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
     if (isLoggedIn) {
-      Navigator.pushReplacement(
+      Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const Navigation()),
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => Navigation(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+        ),
       );
     } else {
-      Navigator.pushReplacement(
+      Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const StartPage()),
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => StartPage(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+        ),
       );
     }
   }

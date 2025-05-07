@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gradution_project/core/utils/App_color.dart';
 import 'package:gradution_project/feathure/home/data/models/meeting_response_model.dart';
+
+import 'meeting_details.dart';
 
 class MeetingBuilder extends StatelessWidget {
   const MeetingBuilder({super.key, required this.meetingModel});
@@ -9,77 +12,77 @@ class MeetingBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-      child: Container(
-        width: 350,
-        height: 45,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: const Offset(0, 3),
-            ),
-          ],
+      padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0),
+      child: InkWell(
+        onTap: () => Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                MeetingDetailsPage(meetingModel: meetingModel),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              return FadeTransition(
+                opacity: animation,
+                child: child,
+              );
+            },
+          ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+        child: Container(
+          height: 35,
+          decoration: BoxDecoration(
+            color: AppColor.lightblue,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Meeting name/number
-              Text(
-                meetingModel.meetingname ?? 'Meeting',
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-
-              // Meeting details row
+              // العنوان + Today
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Left details
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Top X text
-                      if (meetingModel.phoneNumbers != null)
-                        Text(
-                          'Top ${meetingModel.time}',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.lightBlue,
-                          ),
-                        ),
-
-                      // X person approve text
-                      if (meetingModel.date != null)
-                        Text(
-                          '${meetingModel.location} person approve',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.black,
-                          ),
-                        ),
-                    ],
-                  ),
-
-                  // Time text
-                  if (meetingModel.time != null)
-                    Text(
-                      meetingModel.time!,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.lightBlue,
-                      ),
+                  Text(
+                    meetingModel.meetingname ?? 'Meeting 1',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Concert One',
                     ),
+                  ),
+                  const SizedBox(width: 100),
+                  Text(
+                    meetingModel.date ?? 'Today',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontFamily: 'Concert One',
+                        fontWeight: FontWeight.w300),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${meetingModel.phoneNumbers ?? "0"} ',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontFamily: 'Concert One',
+                    ),
+                  ),
+                  const SizedBox(width: 50),
+                  Text(
+                    meetingModel.time ?? '00:00:00',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontFamily: 'Concert One',
+                    ),
+                  ),
                 ],
               ),
             ],

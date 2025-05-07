@@ -18,6 +18,7 @@ class _SignUpState extends State<SignUp> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _phoneController = TextEditingController();
 
   @override
   void dispose() {
@@ -68,6 +69,7 @@ class _SignUpState extends State<SignUp> {
                   nameController: _nameController,
                   emailController: _emailController,
                   passwordController: _passwordController,
+                  phoneController: _phoneController,
                 ),
                 const SizedBox(height: 20),
                 buildSignUpButton(
@@ -76,6 +78,7 @@ class _SignUpState extends State<SignUp> {
                   nameController: _nameController,
                   emailController: _emailController,
                   passwordController: _passwordController,
+                  phoneController: _phoneController,
                 ),
                 const SizedBox(height: 30),
                 buildSocialLogins(context),

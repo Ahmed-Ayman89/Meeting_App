@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gradution_project/core/utils/App_assets.dart';
 import 'package:gradution_project/feathure/home/manager/get_meetings_cubit/get_meetings_cubit.dart';
 import 'package:gradution_project/feathure/home/manager/get_meetings_cubit/get_meetings_state.dart';
+import 'package:gradution_project/feathure/notification/view/notification_view.dart';
 import '../../core/theme/theme_cubit.dart';
 import '../../core/utils/App_color.dart';
 
@@ -40,12 +41,27 @@ class Homepage extends StatelessWidget {
                   : Colors.black,
               size: 26,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      NotificationView(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    return FadeTransition(
+                      opacity: animation,
+                      child: child,
+                    );
+                  },
+                ),
+              );
+            },
           )
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(30.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -60,7 +76,7 @@ class Homepage extends StatelessWidget {
                   return Text(state.error);
                 } else if (state is GetMeetingsSuccessState) {
                   return SizedBox(
-                    height: 200,
+                    height: 150,
                     child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: state.meetings.length,
@@ -74,7 +90,6 @@ class Homepage extends StatelessWidget {
                 return SizedBox();
               },
             ),
-
             Text(
               'Create Meeting',
               style: TextStyle(
