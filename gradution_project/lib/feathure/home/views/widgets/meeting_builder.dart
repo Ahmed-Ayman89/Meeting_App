@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gradution_project/core/utils/App_color.dart';
-import 'package:gradution_project/feathure/home/data/models/meeting_response_model.dart';
 
+import '../../../../core/utils/App_color.dart';
+import '../../data/models/meeting_response_model.dart';
 import 'meeting_details.dart';
 
 class MeetingBuilder extends StatelessWidget {
@@ -11,77 +11,105 @@ class MeetingBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0),
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: InkWell(
+        borderRadius: BorderRadius.circular(12),
         onTap: () => Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                MeetingDetailsPage(meetingModel: meetingModel),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              return FadeTransition(
-                opacity: animation,
-                child: child,
-              );
-            },
-          ),
-        ),
+            context,
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  MeetingDetailsPage(
+                meetingModel: meetingModel,
+              ),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
+              },
+            )),
         child: Container(
-          height: 35,
+          padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
             color: AppColor.lightblue,
             borderRadius: BorderRadius.circular(12),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // العنوان + Today
+              // Meeting name and date
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    meetingModel.meetingname ?? 'Meeting 1',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Concert One',
+                  Expanded(
+                    child: Text(
+                      meetingModel.meetingname ?? 'No Meeting Name',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Concert One',
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  const SizedBox(width: 100),
-                  Text(
-                    meetingModel.date ?? 'Today',
-                    style: TextStyle(
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      meetingModel.date ?? 'Today',
+                      style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 15,
+                        fontSize: 12,
                         fontFamily: 'Concert One',
-                        fontWeight: FontWeight.w300),
+                      ),
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 30),
+
+              // Phone numbers and time
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    '${meetingModel.phoneNumbers ?? "0"} ',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontFamily: 'Concert One',
-                    ),
+                  Row(
+                    children: [
+                      const Icon(Icons.people, color: Colors.white, size: 16),
+                      const SizedBox(width: 8),
+                      Text(
+                        '${meetingModel.phoneNumbers?.length ?? 0}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontFamily: 'Concert One',
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 50),
-                  Text(
-                    meetingModel.time ?? '00:00:00',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontFamily: 'Concert One',
-                    ),
+                  Row(
+                    children: [
+                      const Icon(Icons.access_time,
+                          color: Colors.white, size: 16),
+                      const SizedBox(width: 8),
+                      Text(
+                        meetingModel.time ?? '00:00',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontFamily: 'Concert One',
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

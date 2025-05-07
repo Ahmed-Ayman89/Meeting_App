@@ -76,15 +76,23 @@ class Homepage extends StatelessWidget {
                   return Text(state.error);
                 } else if (state is GetMeetingsSuccessState) {
                   return SizedBox(
-                    height: 150,
+                    height: 150, // Fixed height for the horizontal list
                     child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: state.meetings.length,
-                        itemBuilder: (context, index) {
-                          return MeetingBuilder(
-                            meetingModel: state.meetings[index],
-                          );
-                        }),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: state.meetings.length,
+                      itemBuilder: (context, index) {
+                        return SizedBox(
+                          width: 300, // Fixed width for each meeting card
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: MeetingBuilder(
+                              meetingModel: state.meetings[index],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   );
                 }
                 return SizedBox();
@@ -120,10 +128,19 @@ class Homepage extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MapScreen(),
-                      ));
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          MapScreen(),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                        return FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        );
+                      },
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: context.watch<ThemeCubit>().state

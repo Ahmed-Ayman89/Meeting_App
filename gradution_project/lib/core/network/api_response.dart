@@ -26,7 +26,6 @@ class ApiResponse {
   // Factory method to handle Dio or other exceptions
   factory ApiResponse.fromError(dynamic error) {
     if (error is DioException) {
-      print('Dio error: $error');
       return ApiResponse(
         status: false,
         data: error.response,
@@ -63,7 +62,6 @@ class ApiResponse {
 
   /// Handling errors from the server response
   static String _handleServerError(Response? response) {
-    print(response?.data.toString());
     if (response == null) return "No response from server.";
     if (response.data is Map<String, dynamic>) {
       return response.data["message"] ?? "An error occurred.";
