@@ -18,16 +18,8 @@ class NotificationError extends NotificationState {
   NotificationError(this.message);
 }
 
-class NotificationActionLoading extends NotificationState {}
-
 class NotificationActionSuccess extends NotificationState {
   final String message;
 
   NotificationActionSuccess(this.message);
-}
-
-class NotificationActionError extends NotificationState {
-  final String message;
-
-  NotificationActionError(this.message);
 }
