@@ -13,13 +13,19 @@ class NotificationDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: context.backgroundColor,
       appBar: AppBar(
-        title: const Text(' notification details',
-            style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(
+          'Notification Details',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontFamily: 'ConcertOne',
+            color: context.textColor,
+          ),
+        ),
         centerTitle: true,
         elevation: 0,
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.white,
+        backgroundColor: context.backgroundColor,
       ),
       body: BlocBuilder<NotificationCubit, NotificationState>(
         builder: (context, state) {
@@ -37,26 +43,25 @@ class NotificationDetailsScreen extends StatelessWidget {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  // Notification Card
                   Card(
-                    elevation: 2,
+                    elevation: 4,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(20),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Title with status badge
                           Row(
                             children: [
                               Expanded(
                                 child: Text(
-                                  notification.title ?? ' no title',
+                                  notification.title ?? 'No Title',
                                   style: const TextStyle(
                                     fontSize: 22,
                                     fontWeight: FontWeight.bold,
+                                    fontFamily: 'ConcertOne',
                                   ),
                                 ),
                               ),
@@ -64,35 +69,34 @@ class NotificationDetailsScreen extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(height: 16),
-
-                          // Message
                           Container(
-                            padding: const EdgeInsets.all(12),
+                            padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
                               color: context.backgroundColor,
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(16),
                             ),
                             child: Text(
-                              notification.message ?? 'no message',
-                              style: const TextStyle(fontSize: 16),
+                              notification.message ?? 'No message',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontFamily: 'ConcertOne',
+                              ),
                             ),
                           ),
                           const SizedBox(height: 24),
-
-                          // Details Section
                           _buildDetailCard(
                             icon: Icons.meeting_room,
-                            title: 'meeting details',
+                            title: 'Meeting Details',
                             items: [
                               _buildDetailRow(
                                 Icons.numbers,
-                                ' meeting id',
-                                notification.meetingId ?? ' no id',
+                                'Meeting ID',
+                                notification.meetingId ?? 'No ID',
                               ),
                               _buildDetailRow(
                                 Icons.person,
-                                'user id',
-                                notification.userId ?? ' no id',
+                                'User ID',
+                                notification.userId ?? 'No ID',
                               ),
                             ],
                           ),
@@ -101,11 +105,9 @@ class NotificationDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-
-                  // Action Buttons or Status Message
-                  if (isPending) ...[
+                  if (isPending)
                     _buildActionButtons(context, notification.sId!)
-                  ] else
+                  else
                     _buildStatusMessage(status),
                 ],
               ),
@@ -113,7 +115,7 @@ class NotificationDetailsScreen extends StatelessWidget {
           } else if (state is NotificationError) {
             return Center(child: Text(state.message));
           } else {
-            return const Center(child: Text(' no data available'));
+            return const Center(child: Text('No data available'));
           }
         },
       ),
@@ -128,15 +130,15 @@ class NotificationDetailsScreen extends StatelessWidget {
     };
 
     final labels = {
-      NotificationStatus.pending: ' pending',
-      NotificationStatus.accepted: 'accepted',
-      NotificationStatus.rejected: 'refused',
+      NotificationStatus.pending: 'Pending',
+      NotificationStatus.accepted: 'Accepted',
+      NotificationStatus.rejected: 'Refused',
     };
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: colors[status]!.withOpacity(0.2),
+        color: colors[status]!.withOpacity(0.1),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: colors[status]!),
       ),
@@ -145,6 +147,7 @@ class NotificationDetailsScreen extends StatelessWidget {
         style: TextStyle(
           color: colors[status],
           fontWeight: FontWeight.bold,
+          fontFamily: 'ConcertOne',
         ),
       ),
     );
@@ -167,6 +170,7 @@ class NotificationDetailsScreen extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
+                fontFamily: 'ConcertOne',
               ),
             ),
           ],
@@ -192,6 +196,7 @@ class NotificationDetailsScreen extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
+                  fontFamily: 'ConcertOne',
                 ),
               ),
               const SizedBox(height: 4),
@@ -200,6 +205,7 @@ class NotificationDetailsScreen extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
+                  fontFamily: 'ConcertOne',
                 ),
               ),
             ],
@@ -220,12 +226,16 @@ class NotificationDetailsScreen extends StatelessWidget {
               backgroundColor: Colors.green,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(16),
               ),
             ),
             child: const Text(
-              'accept',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              'Accept',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'ConcertOne',
+              ),
             ),
           ),
         ),
@@ -239,13 +249,17 @@ class NotificationDetailsScreen extends StatelessWidget {
               foregroundColor: Colors.red,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(16),
                 side: const BorderSide(color: Colors.red),
               ),
             ),
             child: const Text(
-              'refuse',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              'Refuse',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'ConcertOne',
+              ),
             ),
           ),
         ),
@@ -280,10 +294,11 @@ class NotificationDetailsScreen extends StatelessWidget {
           const SizedBox(width: 8),
           Text(
             status == NotificationStatus.accepted
-                ? 'you have accepted this notification'
-                : 'you have refused this notification',
+                ? 'You have accepted this notification'
+                : 'You have refused this notification',
             style: TextStyle(
               fontWeight: FontWeight.bold,
+              fontFamily: 'ConcertOne',
               color: status == NotificationStatus.accepted
                   ? Colors.green
                   : Colors.red,
