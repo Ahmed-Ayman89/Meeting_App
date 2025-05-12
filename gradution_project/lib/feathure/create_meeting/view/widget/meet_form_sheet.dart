@@ -124,7 +124,6 @@ class _MeetingFormSheetState extends State<MeetingFormSheet> {
           );
         } else if (state is CreateMeetLocationSuccess) {
           GetMeetingsCubit.get(context).getMeetings();
-          // Navigator.of(context).popUntil((route) => route.isFirst);
           Navigator.pop(context);
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
@@ -138,14 +137,17 @@ class _MeetingFormSheetState extends State<MeetingFormSheet> {
         }
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        child: SingleChildScrollView(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Form(
+            key: _formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -158,7 +160,7 @@ class _MeetingFormSheetState extends State<MeetingFormSheet> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                Text(
+                const Text(
                   "Create Meeting",
                   style: TextStyle(
                       fontSize: 20,
@@ -166,7 +168,13 @@ class _MeetingFormSheetState extends State<MeetingFormSheet> {
                       color: Colors.black),
                 ),
                 const SizedBox(height: 16),
-                _buildTextField("Meeting Name", meetingNameController),
+                _buildTextField("Meeting Name", meetingNameController,
+                    validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Required field';
+                  }
+                  return null;
+                }),
                 const SizedBox(height: 12),
                 _buildTextField("Meeting Location", widget.locationController),
                 const SizedBox(height: 12),
@@ -187,7 +195,7 @@ class _MeetingFormSheetState extends State<MeetingFormSheet> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Phone Numbers",
+                    const Text("Phone Numbers",
                         style: TextStyle(color: Colors.black)),
                     const SizedBox(height: 8),
                     ..._phoneControllers.asMap().entries.map((entry) {
@@ -272,14 +280,14 @@ class _MeetingFormSheetState extends State<MeetingFormSheet> {
       validator:
           validator ?? (value) => value!.isEmpty ? 'Required field' : null,
       decoration: InputDecoration(
-        hintStyle: const TextStyle(color: Colors.black),
         labelText: label,
         labelStyle: const TextStyle(color: Colors.black),
         filled: true,
         fillColor: Colors.grey[100],
         border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none),
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
       ),
       style: const TextStyle(color: Colors.black),
     );
