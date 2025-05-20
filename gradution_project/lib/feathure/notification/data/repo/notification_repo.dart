@@ -3,15 +3,25 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/network/api_helper.dart';
 import '../../../../core/network/api_endpoint.dart';
 import '../model/notification_model.dart';
+import 'response.dart';
 
 class NotificationRepo {
   Future<Either<String, List<AppNotification>>> getNotifications() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('token');
+      final token = prefs.getString('access_token');
+      final refreshToken = prefs.getString('refresh_token');
+      final userId = prefs.getString('userId');
 
-      if (token == null || token.isEmpty) {
+      if (token == null ||
+          token.isEmpty ||
+          refreshToken == null ||
+          refreshToken.isEmpty) {
         return Left("يجب تسجيل الدخول أولاً");
+      }
+
+      if (userId == null || userId.isEmpty) {
+        return Left("لا يمكن تحديد المستخدم");
       }
 
       final response = await APIHelper().getData(
@@ -33,10 +43,11 @@ class NotificationRepo {
     }
   }
 
-  Future<Either<String, String>> acceptNotification(String id) async {
+  Future<Either<String, NotificationResponse>> acceptNotification(
+      String id) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('token');
+      final token = prefs.getString('access_token');
 
       if (token == null || token.isEmpty) {
         return Left("يجب تسجيل الدخول أولاً");
@@ -52,7 +63,8 @@ class NotificationRepo {
       );
 
       if (response.statusCode == 200) {
-        return Right("تم قبول الإشعار بنجاح");
+        final data = response.data;
+        return Right(NotificationResponse.fromJson(data));
       } else {
         return Left("فشل في قبول الإشعار: ${response.statusCode}");
       }
@@ -61,17 +73,22 @@ class NotificationRepo {
     }
   }
 
-  Future<Either<String, String>> rejectNotification(String id) async {
+  Future<Either<String, NotificationResponse>> rejectNotification(
+      String id) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('token');
+      final token = prefs.getString('access_token');
+      final refreshToken = prefs.getString('refresh_token');
 
-      if (token == null || token.isEmpty) {
+      if (token == null ||
+          token.isEmpty ||
+          refreshToken == null ||
+          refreshToken.isEmpty) {
         return Left("يجب تسجيل الدخول أولاً");
       }
 
       final response = await APIHelper().postData(
-        url: EndPoints.postRespons, // ✅ نفس endpoint
+        url: EndPoints.postRespons,
         token: token,
         data: {
           "notificationId": id,
@@ -80,7 +97,8 @@ class NotificationRepo {
       );
 
       if (response.statusCode == 200) {
-        return Right("تم رفض الإشعار بنجاح");
+        final data = response.data;
+        return Right(NotificationResponse.fromJson(data));
       } else {
         return Left("فشل في رفض الإشعار: ${response.statusCode}");
       }

@@ -1,22 +1,21 @@
-class respons {
+class Respons {
   String? message;
-  AppNotification? notification;
+  int? accepted;
+  int? rejected;
 
-  respons({this.message, this.notification});
+  Respons({this.message, this.accepted, this.rejected});
 
-  respons.fromJson(Map<String, dynamic> json) {
+  Respons.fromJson(Map<String, dynamic> json) {
     message = json['message'];
-    notification = json['notification'] != null
-        ? new AppNotification.fromJson(json['notification'])
-        : null;
+    accepted = json['accepted'];
+    rejected = json['rejected'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['message'] = this.message;
-    if (this.notification != null) {
-      data['notification'] = this.notification!.toJson();
-    }
+    data['accepted'] = this.accepted;
+    data['rejected'] = this.rejected;
     return data;
   }
 }

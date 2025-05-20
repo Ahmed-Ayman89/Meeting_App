@@ -14,7 +14,7 @@ class MeetingCubit extends Cubit<CreateMeetLocationState> {
 
     try {
       final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('token');
+      final token = prefs.getString('access_token');
 
       if (token == null || token.isEmpty) {
         emit(CreateMeetLocationFailure('يجب تسجيل الدخول أولاً'));

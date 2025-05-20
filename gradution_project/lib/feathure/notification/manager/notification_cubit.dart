@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gradution_project/feathure/notification/manager/notification_state.dart';
-
 import '../data/model/notification_model.dart';
+
 import '../data/repo/notification_repo.dart';
 
 class NotificationCubit extends Cubit<NotificationState> {
@@ -26,9 +26,14 @@ class NotificationCubit extends Cubit<NotificationState> {
     final result = await repo.acceptNotification(id);
     result.fold(
       (error) => emit(NotificationError(error)),
-      (message) {
+      (response) {
         _updateNotificationStatus(id, "accepted");
-        emit(NotificationActionSuccess(message));
+
+        emit(NotificationActionSuccess(
+          response.message,
+          response.accepted,
+          response.rejected,
+        ));
         emit(NotificationLoaded(List.from(_notifications)));
       },
     );
@@ -38,9 +43,14 @@ class NotificationCubit extends Cubit<NotificationState> {
     final result = await repo.rejectNotification(id);
     result.fold(
       (error) => emit(NotificationError(error)),
-      (message) {
+      (response) {
         _updateNotificationStatus(id, "rejected");
-        emit(NotificationActionSuccess(message));
+
+        emit(NotificationActionSuccess(
+          response.message,
+          response.accepted,
+          response.rejected,
+        ));
         emit(NotificationLoaded(List.from(_notifications)));
       },
     );

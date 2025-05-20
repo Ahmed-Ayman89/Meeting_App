@@ -137,7 +137,8 @@ Widget buildLoginButton({
     listener: (context, state) async {
       if (state is LoginSuccess) {
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('token', state.model.token ?? '');
+        await prefs.setString('token', state.model.accessToken);
+        await prefs.setString('refresh_token', state.model.refreshToken);
         await prefs.setBool('isLoggedIn', true);
 
         ScaffoldMessenger.of(context).showSnackBar(

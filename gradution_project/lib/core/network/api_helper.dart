@@ -19,9 +19,9 @@ class APIHelper {
       },
       receiveDataWhenStatusError: true,
       baseUrl: EndPoints.baseUrl,
-      connectTimeout: Duration(seconds: 10),
-      sendTimeout: Duration(seconds: 10),
-      receiveTimeout: Duration(seconds: 10)));
+      connectTimeout: Duration(seconds: 20),
+      sendTimeout: Duration(seconds: 20),
+      receiveTimeout: Duration(seconds: 20)));
 
   // get request
 
@@ -56,6 +56,7 @@ class APIHelper {
   }
 
   Future<Response> putData({
+    required String token,
     required String url,
     required Map<String, dynamic> data,
   }) async {
