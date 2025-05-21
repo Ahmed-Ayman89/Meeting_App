@@ -1,17 +1,39 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gradution_project/core/utils/App_assets.dart';
 import 'package:gradution_project/feathure/home/manager/get_meetings_cubit/get_meetings_cubit.dart';
 import 'package:gradution_project/feathure/home/manager/get_meetings_cubit/get_meetings_state.dart';
-import 'package:gradution_project/feathure/notification/view/notification_view.dart';
+
 import '../../core/theme/theme_cubit.dart';
 import '../../core/utils/App_color.dart';
-
+import 'package:badges/badges.dart' as badges;
 import '../create_meeting/view/map_screen.dart';
+
+import '../notification/manager/notification_cubit.dart';
+import '../notification/manager/notification_state.dart';
+import '../notification/view/notification_view.dart';
 import 'views/widgets/meeting_builder.dart';
 
-class Homepage extends StatelessWidget {
+class Homepage extends StatefulWidget {
   const Homepage({super.key});
+
+  @override
+  State<Homepage> createState() => _HomepageState();
+}
+
+class _HomepageState extends State<Homepage> {
+  @override
+  void initState() {
+    super.initState();
+
+    context.read<NotificationCubit>().getNotifications();
+
+    Timer.periodic(Duration(seconds: 30), (_) {
+      context.read<NotificationCubit>().getNotifications();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,30 +55,41 @@ class Homepage extends StatelessWidget {
           ),
         ),
         actions: [
-          IconButton(
-            icon: Icon(
-              Icons.notifications,
-              color: context.watch<ThemeCubit>().state
-                  ? Colors.white
-                  : Colors.black,
-              size: 26,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) =>
-                      NotificationView(),
-                  transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) {
-                    return FadeTransition(
-                      opacity: animation,
-                      child: child,
-                    );
+          Padding(
+            padding: const EdgeInsets.only(right: 40),
+            child: BlocBuilder<NotificationCubit, NotificationState>(
+              builder: (context, state) {
+                int unreadCount = 0;
+                if (state is NotificationLoadedWithCount &&
+                    state.unreadCount != null) {
+                  unreadCount = state.unreadCount!;
+                }
+
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => NotificationView()),
+                    ).then((_) {
+                      context.read<NotificationCubit>().markAllAsRead();
+                    });
                   },
-                ),
-              );
-            },
+                  child: badges.Badge(
+                    badgeAnimation: badges.BadgeAnimation.scale(
+                      animationDuration: const Duration(milliseconds: 300),
+                      loopAnimation: false,
+                    ),
+                    showBadge: unreadCount > 0,
+                    badgeContent: Text(
+                      '+$unreadCount',
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                    position: badges.BadgePosition.topEnd(top: -4, end: -4),
+                    child: Icon(Icons.notifications),
+                  ),
+                );
+              },
+            ),
           )
         ],
       ),
@@ -77,7 +110,7 @@ class Homepage extends StatelessWidget {
                     return Text(state.error);
                   } else if (state is GetMeetingsSuccessState) {
                     return SizedBox(
-                      height: 150, // Fixed height for the horizontal list
+                      height: 150,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: state.meetings.length,

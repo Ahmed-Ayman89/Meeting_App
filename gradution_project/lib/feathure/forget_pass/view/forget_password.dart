@@ -106,6 +106,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             }
                             return null;
                           },
+                          onChanged: (value) {},
                         ),
                         const SizedBox(height: 30),
                         BlocConsumer<ForgotPasswordCubit, ForgotPasswordState>(

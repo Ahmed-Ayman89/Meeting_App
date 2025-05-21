@@ -56,6 +56,7 @@ Widget buildSignUpForm({
             }
             return null;
           },
+          onChanged: (value) {},
         ),
         const SizedBox(height: 10),
         CustomTextField(
@@ -69,6 +70,7 @@ Widget buildSignUpForm({
             }
             return null;
           },
+          onChanged: (value) {},
         ),
         const SizedBox(height: 10),
         CustomTextField(
@@ -86,6 +88,7 @@ Widget buildSignUpForm({
             }
             return null;
           },
+          onChanged: (value) {},
         ),
         const SizedBox(height: 10),
         CustomTextField(
@@ -99,6 +102,7 @@ Widget buildSignUpForm({
             }
             return null;
           },
+          onChanged: (value) {},
         ),
       ],
     ),

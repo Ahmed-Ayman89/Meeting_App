@@ -31,7 +31,7 @@ class NotificationDetailsScreen extends StatelessWidget {
         builder: (context, state) {
           if (state is NotificationLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (state is NotificationLoaded) {
+          } else if (state is NotificationLoadedWithCount) {
             final notification = state.notifications.firstWhere(
               (n) => n.sId == notificationId,
             );

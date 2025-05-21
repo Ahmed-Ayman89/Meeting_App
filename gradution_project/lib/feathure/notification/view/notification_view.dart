@@ -24,7 +24,7 @@ class NotificationView extends StatelessWidget {
           builder: (context, state) {
             if (state is NotificationLoading) {
               return const Center(child: CircularProgressIndicator());
-            } else if (state is NotificationLoaded) {
+            } else if (state is NotificationLoadedWithCount) {
               return ListView.builder(
                 padding: const EdgeInsets.all(8),
                 itemCount: state.notifications.length,

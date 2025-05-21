@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gradution_project/feathure/notification/manager/notification_state.dart';
+import 'package:vibration/vibration.dart';
 import '../data/model/notification_model.dart';
 
 import '../data/repo/notification_repo.dart';
@@ -7,6 +8,7 @@ import '../data/repo/notification_repo.dart';
 class NotificationCubit extends Cubit<NotificationState> {
   final NotificationRepo repo;
   List<AppNotification> _notifications = [];
+  int _previousCount = 0;
 
   NotificationCubit(this.repo) : super(NotificationInitial());
 
@@ -17,9 +19,25 @@ class NotificationCubit extends Cubit<NotificationState> {
       (error) => emit(NotificationError(error)),
       (list) {
         _notifications = list;
-        emit(NotificationLoaded(list));
+        final newCount = list.where((n) => n.status == "pending").length;
+        void vibrateOrAnimateBell() async {
+          if (await Vibration.hasVibrator()) {
+            Vibration.vibrate(duration: 300);
+          }
+        }
+
+        if (newCount > _previousCount) {
+          vibrateOrAnimateBell();
+        }
+        _previousCount = newCount;
+        emit(NotificationLoadedWithCount(list, newCount));
       },
     );
+  }
+
+  void markAllAsRead() {
+    _previousCount = 0;
+    emit(NotificationLoadedWithCount(_notifications, 0));
   }
 
   Future<void> accept(String id) async {
@@ -34,7 +52,7 @@ class NotificationCubit extends Cubit<NotificationState> {
           response.accepted,
           response.rejected,
         ));
-        emit(NotificationLoaded(List.from(_notifications)));
+        emit(NotificationLoadedWithCount(List.from(_notifications)));
       },
     );
   }
@@ -51,7 +69,7 @@ class NotificationCubit extends Cubit<NotificationState> {
           response.accepted,
           response.rejected,
         ));
-        emit(NotificationLoaded(List.from(_notifications)));
+        emit(NotificationLoadedWithCount(List.from(_notifications)));
       },
     );
   }

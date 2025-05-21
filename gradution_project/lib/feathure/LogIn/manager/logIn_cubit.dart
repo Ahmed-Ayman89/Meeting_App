@@ -29,7 +29,7 @@ class LoginCubit extends Cubit<LoginState> {
       final model = LoginModel.fromJson(response.data);
 
       await _saveLoginData(model);
-
+      await addEmailHestory(email);
       emit(LoginSuccess(model));
     } catch (error) {
       emit(LoginError(error.toString()));
@@ -44,5 +44,19 @@ class LoginCubit extends Cubit<LoginState> {
     await prefs.setString('user_name', model.user.name);
     await prefs.setString('user_email', model.user.email);
     await prefs.setString('user_phone', model.user.phone);
+  }
+
+  Future<void> addEmailHestory(String email) async {
+    final prefs = await SharedPreferences.getInstance();
+    final history = prefs.getStringList('email_history') ?? [];
+    history.remove(email);
+    history.insert(0, email);
+    final limitedHistory = history.take(5).toList();
+    await prefs.setStringList('email_history', limitedHistory);
+  }
+
+  Future<List<String>> getEmailHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getStringList('email_history') ?? [];
   }
 }

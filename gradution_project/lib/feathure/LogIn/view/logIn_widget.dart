@@ -75,19 +75,45 @@ Widget buildLoginForm({
   required TextEditingController emailController,
   required TextEditingController passwordController,
   required GlobalKey<FormState> formKey,
+  required List<String> emailSuggestions,
 }) {
   return Form(
     key: formKey,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustomTextField(
-          hintText: 'E-mail',
-          controller: emailController,
-          isEditing: true,
-          prefixIcon: Icons.email,
-          validator: (value) =>
-              value == null || value.isEmpty ? 'Please enter your email' : null,
+        Autocomplete<String>(
+          initialValue: TextEditingValue(text: emailController.text),
+          optionsBuilder: (TextEditingValue textEditingValue) {
+            if (textEditingValue.text.isEmpty) {
+              return const Iterable<String>.empty();
+            }
+            return emailSuggestions.where((email) => email
+                .toLowerCase()
+                .startsWith(textEditingValue.text.toLowerCase()));
+          },
+          onSelected: (String selection) {
+            emailController.text = selection;
+          },
+          fieldViewBuilder:
+              (context, controller, focusNode, onEditingComplete) {
+            controller.text = emailController.text;
+            controller.selection = emailController.selection;
+            controller.addListener(() {
+              emailController.value = controller.value;
+            });
+
+            return CustomTextField(
+              hintText: 'E-mail',
+              controller: controller,
+              isEditing: true,
+              prefixIcon: Icons.email,
+              validator: (value) => value == null || value.isEmpty
+                  ? 'Please enter your email'
+                  : null,
+              onChanged: (value) {},
+            );
+          },
         ),
         const SizedBox(height: 10),
         CustomTextField(
@@ -98,6 +124,7 @@ Widget buildLoginForm({
           validator: (value) => value == null || value.isEmpty
               ? 'Please enter your password'
               : null,
+          onChanged: (value) {},
         ),
         const SizedBox(height: 10),
         Align(

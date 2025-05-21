@@ -89,6 +89,7 @@ class EnterOtpScreen extends StatelessWidget {
                       }
                       return null;
                     },
+                    onChanged: (value) {},
                   ),
                   const SizedBox(height: 20),
                   CustomTextField(
@@ -105,6 +106,7 @@ class EnterOtpScreen extends StatelessWidget {
                       }
                       return null;
                     },
+                    onChanged: (value) {},
                   ),
                   const SizedBox(height: 30),
                   BlocConsumer<OtpCubit, OtpState>(

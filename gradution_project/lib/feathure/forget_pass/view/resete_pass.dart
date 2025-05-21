@@ -94,6 +94,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         }
                         return null;
                       },
+                      onChanged: (value) {},
                     ),
                     const SizedBox(height: 20),
 
@@ -109,6 +110,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         }
                         return null;
                       },
+                      onChanged: (value) {},
                     ),
                     const SizedBox(height: 30),
 

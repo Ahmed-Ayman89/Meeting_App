@@ -9,11 +9,6 @@ class NotificationInitial extends NotificationState {}
 
 class NotificationLoading extends NotificationState {}
 
-class NotificationLoaded extends NotificationState {
-  final List<AppNotification> notifications;
-  NotificationLoaded(this.notifications);
-}
-
 class NotificationActionInProgress extends NotificationState {}
 
 class NotificationActionSuccess extends NotificationState {
@@ -27,4 +22,11 @@ class NotificationActionSuccess extends NotificationState {
 class NotificationError extends NotificationState {
   final String message;
   NotificationError(this.message);
+}
+
+class NotificationLoadedWithCount extends NotificationState {
+  final List<AppNotification> notifications;
+  final int? unreadCount;
+
+  NotificationLoadedWithCount(this.notifications, [this.unreadCount]);
 }

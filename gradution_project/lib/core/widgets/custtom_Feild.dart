@@ -21,6 +21,7 @@ class CustomTextField extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.prefixIcon,
     this.validator,
+    required Null Function(dynamic value) onChanged,
   });
 
   @override
