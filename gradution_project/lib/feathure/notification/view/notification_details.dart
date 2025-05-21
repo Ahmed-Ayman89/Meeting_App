@@ -98,6 +98,11 @@ class NotificationDetailsScreen extends StatelessWidget {
                                 'User ID',
                                 notification.userId ?? 'No ID',
                               ),
+                              _buildDetailRow(
+                                Icons.merge_type_outlined,
+                                'type',
+                                notification.type ?? 'No type',
+                              ),
                             ],
                           ),
                         ],
@@ -132,7 +137,7 @@ class NotificationDetailsScreen extends StatelessWidget {
     final labels = {
       NotificationStatus.pending: 'Pending',
       NotificationStatus.accepted: 'Accepted',
-      NotificationStatus.rejected: 'Refused',
+      NotificationStatus.rejected: 'rejected',
     };
 
     return Container(
@@ -295,7 +300,7 @@ class NotificationDetailsScreen extends StatelessWidget {
           Text(
             status == NotificationStatus.accepted
                 ? 'You have accepted this notification'
-                : 'You have refused this notification',
+                : 'You have rejected this notification',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontFamily: 'ConcertOne',

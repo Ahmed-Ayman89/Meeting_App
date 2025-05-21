@@ -73,7 +73,6 @@ class MeetingDetailsPage extends StatelessWidget {
                     icon: Icons.info,
                     label: 'Meeting ID',
                     value: meetingModel.sId!,
-                    isMonospace: true,
                   ),
                 if (meetingModel.iV != null)
                   _buildDetailItem(
@@ -127,7 +126,6 @@ class MeetingDetailsPage extends StatelessWidget {
                     fontWeight:
                         isImportant ? FontWeight.bold : FontWeight.normal,
                     fontFamily: isMonospace ? 'RobotoMono' : 'Concert One',
-                    color: Colors.black87,
                   ),
                 ),
               ],

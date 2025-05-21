@@ -11,17 +11,12 @@ class NotificationRepo {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('access_token');
       final refreshToken = prefs.getString('refresh_token');
-      final userId = prefs.getString('userId');
 
       if (token == null ||
           token.isEmpty ||
           refreshToken == null ||
           refreshToken.isEmpty) {
         return Left("يجب تسجيل الدخول أولاً");
-      }
-
-      if (userId == null || userId.isEmpty) {
-        return Left("لا يمكن تحديد المستخدم");
       }
 
       final response = await APIHelper().getData(
