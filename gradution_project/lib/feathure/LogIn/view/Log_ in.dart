@@ -203,6 +203,8 @@ class _LogInState extends State<LogIn> {
                               ),
                             const SizedBox(height: 10),
                             CustomTextField(
+                              keyboardType: TextInputType.visiblePassword,
+                              obscureText: true,
                               hintText: 'Password',
                               controller: _passwordController,
                               isEditing: true,
