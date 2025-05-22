@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gradution_project/core/theme/theme_ext.dart';
 
 import '../../../../core/utils/App_color.dart';
 import '../../data/models/meeting_response_model.dart';
@@ -36,8 +37,12 @@ class MeetingBuilder extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
-            color: AppColor.lightblue,
+            color: context.cardColor,
             borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: AppColor.white,
+              width: 1,
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

@@ -8,6 +8,7 @@ import '../data/repo/notification_repo.dart';
 class NotificationCubit extends Cubit<NotificationState> {
   final NotificationRepo repo;
   List<AppNotification> _notifications = [];
+  List<AppNotification> filteredNotifications = [];
   int _previousCount = 0;
 
   NotificationCubit(this.repo) : super(NotificationInitial());
@@ -19,7 +20,9 @@ class NotificationCubit extends Cubit<NotificationState> {
       (error) => emit(NotificationError(error)),
       (list) {
         _notifications = list;
+        filteredNotifications = List.from(_notifications);
         final newCount = list.where((n) => n.status == "pending").length;
+
         void vibrateOrAnimateBell() async {
           if (await Vibration.hasVibrator()) {
             Vibration.vibrate(duration: 300);
@@ -30,14 +33,30 @@ class NotificationCubit extends Cubit<NotificationState> {
           vibrateOrAnimateBell();
         }
         _previousCount = newCount;
-        emit(NotificationLoadedWithCount(list, newCount));
+
+        emit(NotificationLoadedWithCount(filteredNotifications, newCount));
       },
     );
   }
 
+  void searchNotifications(String query) {
+    if (query.isEmpty) {
+      filteredNotifications = List.from(_notifications);
+    } else {
+      filteredNotifications = _notifications.where((n) {
+        final title = n.title?.toLowerCase() ?? '';
+        final message = n.message?.toLowerCase() ?? '';
+        return title.contains(query.toLowerCase()) ||
+            message.contains(query.toLowerCase());
+      }).toList();
+    }
+
+    emit(NotificationLoadedWithCount(filteredNotifications, _previousCount));
+  }
+
   void markAllAsRead() {
     _previousCount = 0;
-    emit(NotificationLoadedWithCount(_notifications, 0));
+    emit(NotificationLoadedWithCount(filteredNotifications, 0));
   }
 
   Future<void> accept(String id) async {
@@ -46,13 +65,10 @@ class NotificationCubit extends Cubit<NotificationState> {
       (error) => emit(NotificationError(error)),
       (response) {
         _updateNotificationStatus(id, "accepted");
-
         emit(NotificationActionSuccess(
-          response.message,
-          response.accepted,
-          response.rejected,
-        ));
-        emit(NotificationLoadedWithCount(List.from(_notifications)));
+            response.message, response.accepted, response.rejected));
+        emit(
+            NotificationLoadedWithCount(filteredNotifications, _previousCount));
       },
     );
   }
@@ -63,13 +79,10 @@ class NotificationCubit extends Cubit<NotificationState> {
       (error) => emit(NotificationError(error)),
       (response) {
         _updateNotificationStatus(id, "rejected");
-
         emit(NotificationActionSuccess(
-          response.message,
-          response.accepted,
-          response.rejected,
-        ));
-        emit(NotificationLoadedWithCount(List.from(_notifications)));
+            response.message, response.accepted, response.rejected));
+        emit(
+            NotificationLoadedWithCount(filteredNotifications, _previousCount));
       },
     );
   }
@@ -78,7 +91,7 @@ class NotificationCubit extends Cubit<NotificationState> {
     final index = _notifications.indexWhere((n) => n.sId == id);
     if (index != -1) {
       final updated = _notifications[index];
-      _notifications[index] = AppNotification(
+      final updatedNotification = AppNotification(
         sId: updated.sId,
         userId: updated.userId,
         title: updated.title,
@@ -88,6 +101,13 @@ class NotificationCubit extends Cubit<NotificationState> {
         status: status,
         iV: updated.iV,
       );
+      _notifications[index] = updatedNotification;
+
+      final filteredIndex =
+          filteredNotifications.indexWhere((n) => n.sId == id);
+      if (filteredIndex != -1) {
+        filteredNotifications[filteredIndex] = updatedNotification;
+      }
     }
   }
 }

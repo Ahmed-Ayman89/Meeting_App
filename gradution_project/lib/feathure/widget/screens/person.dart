@@ -48,7 +48,7 @@ class _PersonPageState extends State<PersonPage> {
     await prefs.setString('userEmail', emailController.text);
     await prefs.setString('userPhone', phoneController.text);
 
-    setState(() {}); // تحديث الواجهة بعد الحفظ
+    setState(() {});
   }
 
   void _saveImagePath(String path) async {

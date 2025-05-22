@@ -8,7 +8,7 @@ class MeetingsRepo {
   Future<Either<String, List<GetMeetingResponseModel>>> getMeetings() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('token');
+      final token = prefs.getString('access_token');
 
       if (token == null || token.isEmpty) {
         return Left("يجب تسجيل الدخول أولاً");

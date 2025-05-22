@@ -8,7 +8,8 @@ class GetMeetingsLoadingState extends GetMeetingsState {}
 
 class GetMeetingsSuccessState extends GetMeetingsState {
   final List<GetMeetingResponseModel> meetings;
-  GetMeetingsSuccessState(this.meetings);
+  final List<GetMeetingResponseModel> filteredMeetings;
+  GetMeetingsSuccessState(this.meetings, this.filteredMeetings);
 }
 
 class GetMeetingsErrorState extends GetMeetingsState {

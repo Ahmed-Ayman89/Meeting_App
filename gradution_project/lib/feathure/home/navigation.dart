@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:gradution_project/core/theme/theme_ext.dart';
 import 'package:gradution_project/feathure/home/home_page.dart';
 
 import 'package:gradution_project/feathure/widget/screens/list_page.dart';
@@ -33,8 +34,8 @@ class _NavigationState extends State<Navigation> {
         data: Theme.of(context)
             .copyWith(iconTheme: IconThemeData(color: Colors.white)),
         child: CurvedNavigationBar(
-          buttonBackgroundColor: const Color(0xFF30C3D4),
-          color: const Color(0xFF30C3D4),
+          buttonBackgroundColor: context.navbarColor,
+          color: context.navbarColor,
           backgroundColor: Colors.transparent,
           index: index,
           height: 60,

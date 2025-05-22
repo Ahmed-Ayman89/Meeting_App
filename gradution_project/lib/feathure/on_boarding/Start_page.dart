@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:gradution_project/core/utils/App_assets.dart';
+import 'package:gradution_project/core/utils/App_color.dart';
 import '../LogIn/view/Log_ in.dart';
 
 import '../regester/view/Sign_In.dart';
@@ -77,8 +78,13 @@ class StartPage extends StatelessWidget {
                       const SizedBox(height: 25),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            minimumSize: Size(300, 40),
-                            backgroundColor: Color(0xFF30C3D4)),
+                          side: const BorderSide(
+                            color: AppColor.white,
+                            width: 1,
+                          ),
+                          backgroundColor: Colors.blueGrey[900],
+                          minimumSize: Size(300, 40),
+                        ),
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -108,8 +114,13 @@ class StartPage extends StatelessWidget {
                       const SizedBox(height: 25),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            minimumSize: Size(300, 40),
-                            backgroundColor: Color(0xFF30C3D4)),
+                          side: const BorderSide(
+                            color: AppColor.white,
+                            width: 1,
+                          ),
+                          backgroundColor: Colors.blueGrey[900],
+                          minimumSize: Size(300, 40),
+                        ),
                         onPressed: () {
                           Navigator.push(
                             context,

@@ -6,6 +6,7 @@ import 'package:gradution_project/core/theme/theme_ext.dart';
 import 'package:gradution_project/core/utils/App_assets.dart';
 import 'package:gradution_project/feathure/home/manager/get_meetings_cubit/get_meetings_cubit.dart';
 import 'package:gradution_project/feathure/home/manager/get_meetings_cubit/get_meetings_state.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/theme/theme_cubit.dart';
 import '../../core/utils/App_color.dart';
@@ -133,7 +134,7 @@ class _HomepageState extends State<Homepage> {
               Padding(
                 padding: const EdgeInsets.only(left: 20),
                 child: Text(
-                  'Hi, $userName 👋',
+                  'Welcome back, $userName 👋',
                   style: TextStyle(
                     color: isDark ? Colors.white : Colors.black,
                     fontSize: 20,
@@ -146,28 +147,36 @@ class _HomepageState extends State<Homepage> {
 
               /// SEARCH BAR
               TextField(
+                onChanged: (value) {
+                  context.read<GetMeetingsCubit>().searchMeetings(value);
+                },
                 decoration: InputDecoration(
                   hintText: 'Search meetings...',
                   hintStyle: TextStyle(color: context.textColor),
                   prefixIcon: Icon(Icons.search, color: context.textColor),
-                  filled: true,
-                  fillColor: isDark ? AppColor.lightblue : AppColor.lightblue,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(25),
                   ),
+                ),
+                style: TextStyle(
+                  color: isDark ? Colors.white : Colors.black,
+                  fontSize: 18,
+                  fontFamily: 'Concert One',
                 ),
               ),
               const SizedBox(height: 30),
 
               /// MEETINGS TITLE
-              Text(
-                'Your Meetings',
-                style: TextStyle(
-                  color: isDark ? Colors.white : Colors.black,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Concert One',
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Text(
+                  'Your Meetings',
+                  style: TextStyle(
+                    color: isDark ? Colors.white : Colors.black,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Concert One',
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
@@ -180,41 +189,53 @@ class _HomepageState extends State<Homepage> {
                   } else if (state is GetMeetingsErrorState) {
                     return Text(state.error);
                   } else if (state is GetMeetingsSuccessState) {
+                    final meetings = state.filteredMeetings;
+
+                    if (meetings.isEmpty) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: Center(
+                          child: Text(
+                            'لا يوجد اجتماعات مطابقة',
+                            style: TextStyle(
+                              color: isDark ? Colors.white60 : Colors.black54,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+
                     return SizedBox(
                       height: 150,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: state.meetings.length,
+                        itemCount: meetings.length,
                         itemBuilder: (context, index) {
-                          return AnimatedBuilder(
-                            animation: Listenable.merge([]),
-                            builder: (context, _) {
-                              return TweenAnimationBuilder(
-                                tween: Tween<Offset>(
-                                  begin: const Offset(1, 0),
-                                  end: Offset.zero,
-                                ),
-                                duration:
-                                    Duration(milliseconds: 300 + (index * 100)),
-                                curve: Curves.easeOut,
-                                builder: (context, offset, child) {
-                                  return Transform.translate(
-                                    offset: offset * 50,
-                                    child: Opacity(
-                                      opacity: 1.0,
-                                      child: SizedBox(
-                                        width: 300,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8.0),
-                                          child: MeetingBuilder(
-                                            meetingModel: state.meetings[index],
-                                          ),
-                                        ),
-                                      ),
+                          final meeting = meetings[index];
+                          return TweenAnimationBuilder(
+                            tween: Tween<Offset>(
+                              begin: const Offset(1, 0),
+                              end: Offset.zero,
+                            ),
+                            duration:
+                                Duration(milliseconds: 300 + (index * 100)),
+                            curve: Curves.easeOut,
+                            builder: (context, offset, child) {
+                              return Transform.translate(
+                                offset: offset * 50,
+                                child: Opacity(
+                                  opacity: 1.0,
+                                  child: SizedBox(
+                                    width: 300,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      child:
+                                          MeetingBuilder(meetingModel: meeting),
                                     ),
-                                  );
-                                },
+                                  ),
+                                ),
                               );
                             },
                           );
@@ -236,13 +257,16 @@ class _HomepageState extends State<Homepage> {
               const SizedBox(height: 10),
 
               /// CREATE MEETING SECTION
-              Text(
-                'Create Meeting',
-                style: TextStyle(
-                  color: isDark ? Colors.white : Colors.black,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Concert One',
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Text(
+                  'Create Meeting',
+                  style: TextStyle(
+                    color: isDark ? Colors.white : Colors.black,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Concert One',
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
@@ -278,7 +302,7 @@ class _HomepageState extends State<Homepage> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: isDark ? Colors.black : Colors.white,
-                    side: const BorderSide(color: Color(0xFF30C3D4), width: 2),
+                    side: const BorderSide(color: Colors.blueGrey, width: 2),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
@@ -295,7 +319,7 @@ class _HomepageState extends State<Homepage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 150),
             ],
           ),
         ),
