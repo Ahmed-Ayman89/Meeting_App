@@ -6,4 +6,5 @@ abstract class EndPoints {
   static const String getMeetings = "meetings/user";
   static const String getNotifications = "notifications";
   static const String postRespons = "notifications/respond";
+  static const String deleteNotification = 'notifications/delete';
 }

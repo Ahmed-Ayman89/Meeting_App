@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gradution_project/feathure/home/manager/get_meetings_cubit/get_meetings_state.dart';
 
@@ -35,6 +36,34 @@ class GetMeetingsCubit extends Cubit<GetMeetingsState> {
     emit(GetMeetingsSuccessState(
       _allMeetings,
       filtered,
+    ));
+  }
+
+  Future<void> deleteMeeting(String meetingId, BuildContext context) async {
+    emit(GetMeetingsLoadingState());
+
+    final result = await repo.deleteMeeting(meetingId);
+
+    result.fold(
+      (error) {
+        emit(GetMeetingsErrorState(error));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(error)),
+        );
+      },
+      (success) {
+        if (success) {
+          _removeMeeting(meetingId);
+        }
+      },
+    );
+  }
+
+  void _removeMeeting(String meetingId) {
+    _allMeetings.removeWhere((meeting) => meeting.sId == meetingId);
+    emit(GetMeetingsSuccessState(
+      _allMeetings,
+      _allMeetings,
     ));
   }
 }

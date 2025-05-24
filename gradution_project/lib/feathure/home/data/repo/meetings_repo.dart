@@ -31,4 +31,29 @@ class MeetingsRepo {
       return Left(e.toString());
     }
   }
+
+  Future<Either<String, bool>> deleteMeeting(String meetingId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('access_token');
+
+      if (token == null || token.isEmpty) {
+        return Left("يجب تسجيل الدخول أولاً");
+      }
+
+      final response = await APIHelper().postData(
+        url: '${EndPoints.baseUrl}meetings/delete',
+        token: token,
+        data: {'meetingId': meetingId},
+      );
+
+      if (response.statusCode == 200) {
+        return Right(true);
+      } else {
+        return Left("فشل في حذف الاجتماع: ${response.statusCode}");
+      }
+    } catch (e) {
+      return Left("حدث خطأ: ${e.toString()}");
+    }
+  }
 }

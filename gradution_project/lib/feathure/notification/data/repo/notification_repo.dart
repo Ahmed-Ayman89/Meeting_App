@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/network/api_helper.dart';
 import '../../../../core/network/api_endpoint.dart';
@@ -99,6 +100,38 @@ class NotificationRepo {
       }
     } catch (e) {
       return Left("حدث خطأ: ${e.toString()}");
+    }
+  }
+
+  Future<Either<String, bool>> deleteNotification(String id) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('access_token');
+
+      if (token == null) return Left("Authentication required");
+
+      final dio = Dio();
+      final response = await dio.post(
+        'https://omar-server-weynakk-234.vercel.app/notifications/delete',
+        options: Options(
+          headers: {'Authorization': 'Bearer $token'},
+          contentType: Headers.formUrlEncodedContentType,
+        ),
+        data: {'id': id},
+      );
+
+      if (response.statusCode == 200) {
+        return Right(true);
+      } else {
+        return Left("Delete failed: ${response.statusCode}");
+      }
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 404) {
+        return Left("Invalid endpoint. Contact support");
+      }
+      return Left("Network error: ${e.message}");
+    } catch (e) {
+      return Left("System error: $e");
     }
   }
 }

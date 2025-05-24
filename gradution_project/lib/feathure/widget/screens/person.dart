@@ -128,21 +128,18 @@ class _PersonPageState extends State<PersonPage> {
                 hintText: 'Name',
                 isEditing: true,
                 controller: nameController,
-                onChanged: (value) {},
               ),
               SizedBox(height: 15),
               CustomTextField(
                 hintText: 'E-Mail',
                 isEditing: true,
                 controller: emailController,
-                onChanged: (value) {},
               ),
               SizedBox(height: 15),
               CustomTextField(
                 hintText: 'Phone',
                 isEditing: true,
                 controller: phoneController,
-                onChanged: (value) {},
               ),
               SizedBox(height: 30),
               ElevatedButton(

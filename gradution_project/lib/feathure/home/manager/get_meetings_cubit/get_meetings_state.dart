@@ -16,3 +16,12 @@ class GetMeetingsErrorState extends GetMeetingsState {
   final String error;
   GetMeetingsErrorState(this.error);
 }
+
+class MeetingDeletedState extends GetMeetingsState {
+  final String message;
+
+  MeetingDeletedState(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

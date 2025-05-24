@@ -1,12 +1,10 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gradution_project/core/theme/theme_ext.dart';
 import 'package:gradution_project/core/utils/App_assets.dart';
 import 'package:gradution_project/feathure/home/manager/get_meetings_cubit/get_meetings_cubit.dart';
 import 'package:gradution_project/feathure/home/manager/get_meetings_cubit/get_meetings_state.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/theme/theme_cubit.dart';
 import '../../core/utils/App_color.dart';
@@ -196,10 +194,11 @@ class _HomepageState extends State<Homepage> {
                         padding: const EdgeInsets.symmetric(vertical: 20),
                         child: Center(
                           child: Text(
-                            'لا يوجد اجتماعات مطابقة',
+                            'No meetings found',
                             style: TextStyle(
                               color: isDark ? Colors.white60 : Colors.black54,
                               fontSize: 16,
+                              fontFamily: 'Concert One',
                             ),
                           ),
                         ),

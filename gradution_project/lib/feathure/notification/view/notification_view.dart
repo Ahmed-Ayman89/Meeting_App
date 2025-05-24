@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gradution_project/core/theme/theme_ext.dart';
+import 'package:vibration/vibration.dart';
 
 import '../data/repo/notification_repo.dart';
 import '../manager/notification_cubit.dart';
@@ -55,14 +56,65 @@ class NotificationView extends StatelessWidget {
                     ),
                     Expanded(
                       child: notifications.isEmpty
-                          ? const Center(child: Text("لا يوجد إشعارات مطابقة."))
+                          ? const Center(
+                              child: Text("No notifications found.",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: 'concert one',
+                                  )))
                           : ListView.builder(
                               padding: const EdgeInsets.all(8),
                               itemCount: notifications.length,
                               itemBuilder: (context, index) {
                                 final notification = notifications[index];
                                 return Dismissible(
-                                  key: Key(notification.message.toString()),
+                                  key: Key(notification.sId!),
+                                  direction: DismissDirection.endToStart,
+                                  background: Container(
+                                    alignment: Alignment.centerRight,
+                                    padding: const EdgeInsets.only(right: 20),
+                                    color: Colors.red,
+                                    child: const Icon(Icons.delete,
+                                        color: Colors.white),
+                                  ),
+                                  confirmDismiss: (direction) async {
+                                    return await showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: const Text(" confirm delete",
+                                            style: TextStyle(
+                                                fontFamily: 'concert one')),
+                                        content: const Text(
+                                          " Are you sure you want to delete this notification?",
+                                          style: TextStyle(
+                                              fontFamily: 'concert one'),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.of(context)
+                                                    .pop(false),
+                                            child: const Text("cancel"),
+                                          ),
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(true),
+                                            child: const Text("delete",
+                                                style: TextStyle(
+                                                    fontFamily: 'concert one',
+                                                    color: Colors.red)),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                  onDismissed: (direction) {
+                                    context
+                                        .read<NotificationCubit>()
+                                        .deleteNotification(notification.sId!);
+
+                                    Vibration.vibrate(duration: 100);
+                                  },
                                   child: Card(
                                     elevation: 2,
                                     margin:

@@ -18,6 +18,7 @@ class ListPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        leading: SizedBox(),
         title: Text(
           "Settings",
           style: TextStyle(

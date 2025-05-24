@@ -30,3 +30,8 @@ class NotificationLoadedWithCount extends NotificationState {
 
   NotificationLoadedWithCount(this.notifications, [this.unreadCount]);
 }
+
+class NotificationDeletedSuccessfully extends NotificationState {
+  @override
+  List<Object> get props => [];
+}

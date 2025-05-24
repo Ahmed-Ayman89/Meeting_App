@@ -110,4 +110,22 @@ class NotificationCubit extends Cubit<NotificationState> {
       }
     }
   }
+
+  Future<void> deleteNotification(String id) async {
+    final result = await repo.deleteNotification(id);
+    result.fold(
+      (error) => emit(NotificationError(error)),
+      (success) {
+        _removeNotification(id);
+        emit(NotificationDeletedSuccessfully());
+        emit(
+            NotificationLoadedWithCount(filteredNotifications, _previousCount));
+      },
+    );
+  }
+
+  void _removeNotification(String id) {
+    _notifications.removeWhere((n) => n.sId == id);
+    filteredNotifications.removeWhere((n) => n.sId == id);
+  }
 }
